@@ -1,19 +1,19 @@
 <template>
-    <div class="min-h-screen bg-zinc-900 text-white flex flex-col items-center p-4">
-      <header class="text-3xl font-bold text-center text-white mb-4">
-        <span class="text-red-500">K</span>
-        <span class="text-white">A</span>
-        <span class="text-white">T</span>
-        <span class="text-green-500">L</span>
-        <span class="text-green-500">A</span>
+    <div class="min-h-screen max-w-screen bg-zinc-900 text-white flex flex-col items-center p-2 sm:p-4">
+      <header class="text-2xl sm:text-3xl font-bold text-center text-white mb-2 sm:mb-4">
+        <span class="text-red-500 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">K</span>
+        <span class="text-black [text-shadow:_2px_2px_4px_rgb(255_255_255_/_40%)]">A</span>
+        <span class="text-white [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">T</span>
+        <span class="text-green-500 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">L</span>
+        <span class="text-green-500 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">A</span>
       </header>
   
-      <div class="grid grid-rows-6 gap-2">
-        <div v-for="(guessRow, rowIndex) in 6" :key="rowIndex" class="grid grid-cols-5 gap-2">
+      <div class="grid grid-rows-6 gap-1 sm:gap-2">
+        <div v-for="(guessRow, rowIndex) in 6" :key="rowIndex" class="grid grid-cols-5 gap-1 sm:gap-2">
           <div
             v-for="colIndex in 5"
             :key="colIndex"
-            class="w-14 h-14 border-2 text-2xl flex items-center justify-center font-bold uppercase transition-all duration-500 ease-in-out transform"
+            class="w-10 h-10 sm:w-14 sm:h-14 border-2 text-xl sm:text-2xl flex items-center justify-center font-bold uppercase transition-all duration-500 ease-in-out transform"
             :class="[getBoxClass(rowIndex, colIndex - 1), getFlipClass(rowIndex, colIndex - 1)]"
           >
             {{ getLetterDisplay(rowIndex, colIndex - 1) }}
@@ -21,8 +21,8 @@
         </div>
       </div>
   
-      <div class="mt-6 space-y-2 text-center">
-        <div class="flex justify-center gap-1">
+      <div class="mt-4 sm:mt-6 space-y-1 sm:space-y-2 text-center w-full max-w-[350px] sm:max-w-[500px] px-2">
+        <div class="flex justify-center gap-0.5 sm:gap-1">
           <button
             v-for="key in 'QWERTYUIOP'.split('')"
             :key="key"
@@ -33,7 +33,7 @@
             {{ key }}
           </button>
         </div>
-        <div class="flex justify-center gap-1">
+        <div class="flex justify-center gap-0.5 sm:gap-1">
           <button
             v-for="key in 'ASDFGHJKL'.split('')"
             :key="key"
@@ -44,7 +44,7 @@
             {{ key }}
           </button>
         </div>
-        <div class="flex justify-center gap-1">
+        <div class="flex justify-center gap-0.5 sm:gap-1">
           <button class="key bg-zinc-600" @click="pressEnter">ENTER</button>
           <button
             v-for="key in 'ZXCVBNM'.split('')"
@@ -59,35 +59,35 @@
         </div>
       </div>
   
-      <p class="mt-2 text-sm text-zinc-400">{{ message }}</p>
+      <p class="mt-2 text-xs sm:text-sm text-zinc-400">{{ message }}</p>
     </div>
   </template>
   
   <script setup>
   import { ref, onMounted, onUnmounted } from 'vue'
-  import { Client, Databases } from 'appwrite';
-  const client = new Client();
-client
-    .setEndpoint('https://fra.cloud.appwrite.io/v1')
-    .setProject('64c0a269c34f9d4c04ad');
+//   import { Client, Databases } from 'appwrite';
+//   const client = new Client();
+// client
+//     .setEndpoint('https://fra.cloud.appwrite.io/v1')
+//     .setProject('64c0a269c34f9d4c04ad');
 
-    const databases = new Databases(client);
+    // const databases = new Databases(client);
 
 //   const targetWord = 'makar'
-    const targetWord = ref('')
-    databases.listDocuments(
-        '682c25c1002bd7f5f138',
-        '682c25cb00129b47d29a',
-        [
-            Query.equal('date', new Date().toISOString().split('T')[0]),
-            Query.limit(1)
-        ]
-    ).then((response) => {
-        targetWord.value = response.documents[0].word
-        console.log(targetWord.value)
-    }).catch((error) => {
-        console.error(error);
-    });
+    // const targetWord = ref('')
+    // databases.listDocuments(
+    //     '682c25c1002bd7f5f138',
+    //     '682c25cb00129b47d29a',
+    //     [
+    //         Query.equal('date', new Date().toISOString().split('T')[0]),
+    //         Query.limit(1)
+    //     ]
+    // ).then((response) => {
+    //     targetWord.value = response.documents[0].word
+    //     console.log(targetWord.value)
+    // }).catch((error) => {
+    //     console.error(error);
+    // });
   const guesses = ref([])
   const currentGuess = ref('')
   const maxAttempts = 6
@@ -218,16 +218,25 @@ client
   
   <style scoped>
   .key {
-    min-width: 2.5rem;
-    padding: 0.5rem 0.75rem;
+    min-width: 1.75rem;
+    padding: 0.25rem 0.5rem;
     border-radius: 0.25rem;
     font-weight: bold;
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     transition: transform 0.1s ease;
+    background-color: #615f5f;
+  }
+  
+  @media (min-width: 640px) {
+    .key {
+      min-width: 2.5rem;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.875rem;
+    }
   }
   
   .key:hover {
-    background-color: #52525b;
+    background-color: #3b3b42;
   }
   
   .key:active {
