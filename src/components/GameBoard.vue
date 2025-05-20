@@ -8,12 +8,12 @@
         <span class="text-green-500 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">A</span>
       </header>
   
-      <div class="grid grid-rows-6 gap-1 sm:gap-2 min-h-[70vh]">
+      <div class="grid grid-rows-6 gap-1 sm:gap-2 min-h-[50vh] lg:min-h-[60vh]">
         <div v-for="(guessRow, rowIndex) in 6" :key="rowIndex" class="grid grid-cols-5 gap-1 sm:gap-2">
           <div
             v-for="colIndex in 5"
             :key="colIndex"
-            class="w-10 h-10 sm:w-14 sm:h-14 lg:w-25 lg:h-25 border-2 text-xl sm:text-2xl flex items-center justify-center font-bold uppercase transition-all duration-500 ease-in-out transform"
+            class="w-15 h-15 sm:w-14 sm:h-14 lg:w-25 lg:h-25 border-2 text-xl sm:text-2xl flex items-center justify-center font-bold uppercase transition-all duration-500 ease-in-out transform"
             :class="[getBoxClass(rowIndex, colIndex - 1), getFlipClass(rowIndex, colIndex - 1)]"
           >
             {{ getLetterDisplay(rowIndex, colIndex - 1) }}
