@@ -73,28 +73,15 @@
   <script setup>
   import { ref, onMounted, onUnmounted } from 'vue'
 //   import { Client, Databases } from 'appwrite';
-//   const client = new Client();
+// const client = new Client();
 // client
 //     .setEndpoint('https://fra.cloud.appwrite.io/v1')
 //     .setProject('64c0a269c34f9d4c04ad');
 
     // const databases = new Databases(client);
 
-  const targetWord = 'cinta'
-    // const targetWord = ref('')
-    // databases.listDocuments(
-    //     '682c25c1002bd7f5f138',
-    //     '682c25cb00129b47d29a',
-    //     [
-    //         Query.equal('date', new Date().toISOString().split('T')[0]),
-    //         Query.limit(1)
-    //     ]
-    // ).then((response) => {
-    //     targetWord.value = response.documents[0].word
-    //     console.log(targetWord.value)
-    // }).catch((error) => {
-    //     console.error(error);
-    // });
+  const targetWord = ref('')
+  const validWords = ref([])
   const guesses = ref([])
   const currentGuess = ref('')
   const maxAttempts = 6
@@ -104,18 +91,37 @@
   
   const usedKeys = ref({})
   
+  async function loadWords() {
+    try {
+      const response = await fetch('/words.json')
+      const data = await response.json()
+      validWords.value = data.words
+      // Select a random word as target
+      targetWord.value = validWords.value[Math.floor(Math.random() * validWords.value.length)]
+    } catch (error) {
+      console.error('Error loading words:', error)
+      message.value = 'Error loading words. Please refresh the page.'
+    }
+  }
+  
   function submitGuess() {
     if (currentGuess.value.length !== 5) {
       message.value = 'Kata harus 5 huruf.'
       return
     }
   
-    const guess = currentGuess.value.toLowerCase().split('')
-    guesses.value.push(guess)
-    guess.forEach((letter, index) => {
-      if (targetWord[index] === letter) {
+    const guess = currentGuess.value.toLowerCase()
+    if (!validWords.value.includes(guess)) {
+      message.value = 'Kata tidak ada dalam kamus.'
+      return
+    }
+  
+    const guessArray = guess.split('')
+    guesses.value.push(guessArray)
+    guessArray.forEach((letter, index) => {
+      if (targetWord.value[index] === letter) {
         usedKeys.value[letter] = 'correct'
-      } else if (targetWord.includes(letter)) {
+      } else if (targetWord.value.includes(letter)) {
         if (usedKeys.value[letter] !== 'correct') usedKeys.value[letter] = 'present'
       } else {
         usedKeys.value[letter] = 'absent'
@@ -124,14 +130,14 @@
   
     currentGuess.value = ''
   
-    if (guess.join('') === targetWord) {
+    if (guess === targetWord.value) {
       message.value = '🎉 Selamat! Kamu menang!'
       gameOver.value = true
       return
     }
   
     if (guesses.value.length >= maxAttempts) {
-      message.value = `😢 Kamu kalah. Kata: ${targetWord.toUpperCase()}`
+      message.value = `😢 Kamu kalah. Kata: ${targetWord.value.toUpperCase()}`
       gameOver.value = true
     }
   }
@@ -168,9 +174,9 @@
     if (!guessRow) return 'border-zinc-600'
   
     const letter = guessRow[col]
-    const correctLetter = targetWord[col]
+    const correctLetter = targetWord.value[col]
     const isCorrect = letter === correctLetter
-    const isPresent = !isCorrect && targetWord.includes(letter)
+    const isPresent = !isCorrect && targetWord.value.includes(letter)
   
     return {
       'bg-green-600 border-green-600 text-white': isCorrect,
@@ -215,6 +221,7 @@
   }
   
   onMounted(() => {
+    loadWords()
     window.addEventListener('keydown', handlePhysicalKeyboard)
   })
   
