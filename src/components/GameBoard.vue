@@ -72,13 +72,6 @@
   
   <script setup>
   import { ref, onMounted, onUnmounted } from 'vue'
-//   import { Client, Databases } from 'appwrite';
-// const client = new Client();
-// client
-//     .setEndpoint('https://fra.cloud.appwrite.io/v1')
-//     .setProject('64c0a269c34f9d4c04ad');
-
-    // const databases = new Databases(client);
 
   const targetWord = ref('')
   const validWords = ref([])
@@ -122,12 +115,16 @@
       if (targetWord.value[index] === letter) {
         usedKeys.value[letter] = 'correct'
       } else if (targetWord.value.includes(letter)) {
-        if (usedKeys.value[letter] !== 'correct') usedKeys.value[letter] = 'present'
+        if (usedKeys.value[letter] !== 'correct') {
+          usedKeys.value[letter] = 'present'
+        }
       } else {
-        usedKeys.value[letter] = 'absent'
+        if (!usedKeys.value[letter]) {
+          usedKeys.value[letter] = 'absent'
+        }
       }
     })
-  
+
     currentGuess.value = ''
   
     if (guess === targetWord.value) {
@@ -197,6 +194,7 @@
       'bg-green-600 text-white': status === 'correct',
       'bg-yellow-500 text-white': status === 'present',
       'bg-zinc-700 text-white': status === 'absent',
+      'bg-zinc-600 text-white': !status
     }
   }
   
@@ -240,7 +238,11 @@
     transition: transform 0.1s ease;
     background-color: #615f5f;
   }
-  
+
+  .key.bg-green-600 { background-color: #16a34a !important; } /* 🟩 */
+  .key.bg-yellow-500 { background-color: #eab308 !important; } /* 🟨 */
+  .key.bg-zinc-700 { background-color: #3f3f46 !important; } /* ⬜ */
+
   @media (min-width: 640px) {
     .key {
       min-width: 2.5rem;
