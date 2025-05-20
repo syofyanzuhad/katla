@@ -156,9 +156,9 @@
   }
 
   function pressBackspace() {
-    if (gameOver.value) return
-    currentGuess.value = currentGuess.value.slice(0, -1)
-    playSound()
+    if (currentGuess.value.length > 0 && !gameOver.value) {
+      currentGuess.value = currentGuess.value.slice(0, -1)
+    }
   }
 
   function pressEnter() {
