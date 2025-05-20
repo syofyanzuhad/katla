@@ -73,7 +73,7 @@
 
     // const databases = new Databases(client);
 
-  const targetWord = 'makar'
+  const targetWord = 'cinta'
     // const targetWord = ref('')
     // databases.listDocuments(
     //     '682c25c1002bd7f5f138',
