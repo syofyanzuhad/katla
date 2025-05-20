@@ -1,76 +1,85 @@
 <template>
-    <div class="min-h-screen max-w-screen w-full bg-zinc-900 text-white flex flex-col items-center p-2 sm:p-4">
-      <header class="text-2xl sm:text-3xl font-bold text-center text-white mb-2 sm:mb-4">
-        <span class="text-red-500 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">K</span>
-        <span class="text-red-500 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">A</span>
-        <span class="text-black [text-shadow:_2px_2px_4px_rgb(255_255_255_/_40%)]">T</span>
-        <span class="text-white [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">L</span>
-        <span class="text-green-500 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">L</span>
-        <span class="text-green-500 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">A</span>
-      </header>
-        <div class="text-sm sm:text-base text-zinc-400 mb-2 sm:mb-4">
-            <p>Selamat datang di permainan kata!</p>
-            <p>Masukkan kata 5 huruf dan tekan ENTER.</p>
-            <p>🟩: huruf dan posisi benar, 🟨: huruf benar posisi salah, ⬜️: huruf dan posisi salah</p>
-            <p>Gunakan tombol keyboard atau klik tombol di bawah untuk memasukkan huruf.</p>
-        </div>
-  
-      <div class="grid grid-rows-6 gap-1 sm:gap-2 min-h-[50vh] lg:min-h-[60vh]">
-        <div v-for="(guessRow, rowIndex) in 6" :key="rowIndex" class="grid grid-cols-5 gap-1 sm:gap-2">
-          <div
-            v-for="colIndex in 5"
-            :key="colIndex"
-            class="w-15 h-15 sm:w-14 sm:h-14 lg:w-25 lg:h-25 border-2 text-xl sm:text-2xl flex items-center justify-center font-bold uppercase transition-all duration-500 ease-in-out transform"
-            :class="[getBoxClass(rowIndex, colIndex - 1), getFlipClass(rowIndex, colIndex - 1)]"
-          >
-            {{ getLetterDisplay(rowIndex, colIndex - 1) }}
-          </div>
+  <div class="min-h-screen max-w-screen w-full bg-zinc-900 text-white flex flex-col items-center p-2 sm:p-4">
+    <header class="text-2xl sm:text-3xl font-bold text-center text-white mb-2 sm:mb-4">
+      <span class="text-red-500 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">K</span>
+      <span class="text-red-500 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">A</span>
+      <span class="text-black [text-shadow:_2px_2px_4px_rgb(255_255_255_/_40%)]">T</span>
+      <span class="text-white [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">L</span>
+      <span class="text-green-500 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">L</span>
+      <span class="text-green-500 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">A</span>
+    </header>
+      <div class="text-sm sm:text-base text-zinc-400 mb-2 sm:mb-4">
+          <p>Selamat datang di permainan kata!</p>
+          <p>Masukkan kata 5 huruf dan tekan ENTER.</p>
+          <p>🟩: huruf dan posisi benar, 🟨: huruf benar posisi salah, ⬜️: huruf dan posisi salah</p>
+          <p>Gunakan tombol keyboard atau klik tombol di bawah untuk memasukkan huruf.</p>
+      </div>
+
+    <div class="grid grid-rows-6 gap-1 sm:gap-2 min-h-[50vh] lg:min-h-[60vh]">
+      <div v-for="(guessRow, rowIndex) in 6" :key="rowIndex" class="grid grid-cols-5 gap-1 sm:gap-2">
+        <div
+          v-for="colIndex in 5"
+          :key="colIndex"
+          class="w-15 h-15 sm:w-14 sm:h-14 lg:w-25 lg:h-25 border-2 text-xl sm:text-2xl flex items-center justify-center font-bold uppercase transition-all duration-500 ease-in-out transform"
+          :class="[
+            getBoxClass(rowIndex, colIndex - 1),
+            getFlipClass(rowIndex, colIndex - 1),
+            { 'animate-shake': shakeRowIndex === rowIndex }
+          ]"
+        >
+          {{ getLetterDisplay(rowIndex, colIndex - 1) }}
         </div>
       </div>
-  
-      <div class="mt-5 sm:mt-6 space-y-1 sm:space-y-2 text-center sm:max-w-[500px] px-2 w-full lg:w-full">
-        <div class="flex justify-center gap-0.5 sm:gap-1">
-          <button
-            v-for="key in 'QWERTYUIOP'.split('')"
-            :key="key"
-            class="key"
-            :class="getKeyClass(key.toLowerCase())"
-            @click="pressKey(key)"
-          >
-            {{ key }}
-          </button>
-        </div>
-        <div class="flex justify-center gap-0.5 sm:gap-1">
-          <button
-            v-for="key in 'ASDFGHJKL'.split('')"
-            :key="key"
-            class="key"
-            :class="getKeyClass(key.toLowerCase())"
-            @click="pressKey(key)"
-          >
-            {{ key }}
-          </button>
-        </div>
-        <div class="flex justify-center gap-0.5 sm:gap-1">
-          <button class="key bg-zinc-600" @click="pressEnter">ENTER</button>
-          <button
-            v-for="key in 'ZXCVBNM'.split('')"
-            :key="key"
-            class="key"
-            :class="getKeyClass(key.toLowerCase())"
-            @click="pressKey(key)"
-          >
-            {{ key }}
-          </button>
-          <button class="key bg-zinc-600" @click="pressBackspace">⌫</button>
-        </div>
-      </div>
-  
-      <p class="mt-2 text-xs sm:text-sm text-zinc-400">{{ message }}</p>
     </div>
-  </template>
-  
-  <script setup>
+
+  <p class="mt-3 text-xs sm:text-sm text-zinc-400">{{ message }}</p>
+
+    <div class="mt-3 sm:mt-4 space-y-1 sm:space-y-2 text-center sm:max-w-[500px] px-2 w-full lg:w-full">
+      <div class="flex justify-center gap-0.5 sm:gap-1">
+        <button
+          v-for="key in 'QWERTYUIOP'.split('')"
+          :key="key"
+          class="key"
+          :class="getKeyClass(key.toLowerCase())"
+          @click="pressKey(key)"
+        >
+          {{ key }}
+        </button>
+      </div>
+      <div class="flex justify-center gap-0.5 sm:gap-1">
+        <button
+          v-for="key in 'ASDFGHJKL'.split('')"
+          :key="key"
+          class="key"
+          :class="getKeyClass(key.toLowerCase())"
+          @click="pressKey(key)"
+        >
+          {{ key }}
+        </button>
+      </div>
+      <div class="flex justify-center gap-0.5 sm:gap-1">
+        <button class="key bg-zinc-600" @click="pressEnter">ENTER</button>
+        <button
+          v-for="key in 'ZXCVBNM'.split('')"
+          :key="key"
+          class="key"
+          :class="getKeyClass(key.toLowerCase())"
+          @click="pressKey(key)"
+        >
+          {{ key }}
+        </button>
+        <button class="key bg-zinc-600" @click="pressBackspace">⌫</button>
+      </div>
+    </div>
+
+    <!-- footer -->
+    <p>
+      Katla by <a href="//syofyanzuhad.dev" target="_blank" class="text-blue-500 hover:text-blue-400 transition duration-200">Syofyan Zuhad</a>
+    </p>
+  </div>
+</template>
+
+<script setup>
   import { ref, onMounted, onUnmounted } from 'vue'
 
   const targetWord = ref('')
@@ -81,9 +90,10 @@
   const gameOver = ref(false)
   const message = ref('')
   const audio = new Audio('https://www.soundjay.com/button/sounds/button-16.mp3')
-  
+  const shakeRowIndex = ref(null)
+
   const usedKeys = ref({})
-  
+
   async function loadWords() {
     try {
       const response = await fetch('/words.json')
@@ -96,98 +106,100 @@
       message.value = 'Error loading words. Please refresh the page.'
     }
   }
-  
+
   function submitGuess() {
     if (currentGuess.value.length !== 5) {
       message.value = 'Kata harus 5 huruf.'
+      shakeRowIndex.value = guesses.value.length
+      resetShake()
       return
     }
-  
+
     const guess = currentGuess.value.toLowerCase()
     if (!validWords.value.includes(guess)) {
       message.value = 'Kata tidak ada dalam kamus.'
+      shakeRowIndex.value = guesses.value.length
+      resetShake()
       return
     }
-  
+
     const guessArray = guess.split('')
     guesses.value.push(guessArray)
     guessArray.forEach((letter, index) => {
       if (targetWord.value[index] === letter) {
         usedKeys.value[letter] = 'correct'
       } else if (targetWord.value.includes(letter)) {
-        if (usedKeys.value[letter] !== 'correct') {
-          usedKeys.value[letter] = 'present'
-        }
+        if (usedKeys.value[letter] !== 'correct') usedKeys.value[letter] = 'present'
       } else {
-        if (!usedKeys.value[letter]) {
-          usedKeys.value[letter] = 'absent'
-        }
+        usedKeys.value[letter] = 'absent'
       }
     })
 
     currentGuess.value = ''
-  
+
     if (guess === targetWord.value) {
       message.value = '🎉 Selamat! Kamu menang!'
       gameOver.value = true
       return
     }
-  
+
     if (guesses.value.length >= maxAttempts) {
       message.value = `😢 Kamu kalah. Kata: ${targetWord.value.toUpperCase()}`
       gameOver.value = true
     }
   }
-  
+
   function pressKey(key) {
     if (gameOver.value || currentGuess.value.length >= 5 || guesses.value.length >= maxAttempts) return
     currentGuess.value += key.toLowerCase()
     playSound()
   }
-  
+
   function pressBackspace() {
     if (gameOver.value) return
     currentGuess.value = currentGuess.value.slice(0, -1)
     playSound()
   }
-  
+
   function pressEnter() {
     if (!gameOver.value) submitGuess()
   }
-  
-  function getLetter(row, col) {
-    return guesses.value[row]?.[col] || ''
-  }
-  
+
+  function resetShake() {
+  setTimeout(() => {
+    shakeRowIndex.value = null
+  }, 500)
+}
+
   function getLetterDisplay(row, col) {
     if (row === guesses.value.length) {
       return currentGuess.value[col]?.toUpperCase() || ''
     }
     return guesses.value[row]?.[col]?.toUpperCase() || ''
   }
-  
+
   function getBoxClass(row, col) {
     const guessRow = guesses.value[row]
     if (!guessRow) return 'border-zinc-600'
-  
+
     const letter = guessRow[col]
     const correctLetter = targetWord.value[col]
     const isCorrect = letter === correctLetter
     const isPresent = !isCorrect && targetWord.value.includes(letter)
-  
+
     return {
       'bg-green-600 border-green-600 text-white': isCorrect,
       'bg-yellow-500 border-yellow-500 text-white': isPresent,
       'bg-zinc-700 border-zinc-700 text-white': !isCorrect && !isPresent,
     }
   }
-  
+
   function getFlipClass(row, col) {
     const guessRow = guesses.value[row]
     if (!guessRow) return ''
     return 'animate-flip'
   }
-  
+
   function getKeyClass(letter) {
     const status = usedKeys.value[letter]
     return {
@@ -197,18 +209,18 @@
       'bg-zinc-600 text-white': !status
     }
   }
-  
+
   function playSound() {
     if (audio.paused) return
     audio.currentTime = 0
     audio.play()
   }
-  
+
   function handlePhysicalKeyboard(e) {
     if (gameOver.value) return
-  
+
     const key = e.key.toLowerCase()
-  
+
     if (key === 'enter') {
       pressEnter()
     } else if (key === 'backspace') {
@@ -217,18 +229,18 @@
       pressKey(key)
     }
   }
-  
+
   onMounted(() => {
     loadWords()
     window.addEventListener('keydown', handlePhysicalKeyboard)
   })
-  
+
   onUnmounted(() => {
     window.removeEventListener('keydown', handlePhysicalKeyboard)
   })
-  </script>
-  
-  <style scoped>
+</script>
+
+<style scoped>
   .key {
     min-width: 1.75rem;
     padding: 0.5rem 0.75rem;
@@ -258,15 +270,15 @@
         font-size: 1rem;
         }
     }
-  
+
   .key:hover {
     background-color: #3b3b42;
   }
-  
+
   .key:active {
     transform: scale(0.95);
   }
-  
+
   @keyframes flip {
     0% {
       transform: rotateX(0);
@@ -278,9 +290,21 @@
       transform: rotateX(0);
     }
   }
-  
+
   .animate-flip {
     animation: flip 0.5s ease-in-out;
   }
-  </style>
-  
+
+  @keyframes shake {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(-5px); }
+  40% { transform: translateX(5px); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(5px); }
+  100% { transform: translateX(0); }
+}
+
+.animate-shake {
+  animation: shake 0.5s ease-in-out;
+}
+</style>
