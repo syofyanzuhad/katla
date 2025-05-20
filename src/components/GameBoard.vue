@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-screen max-w-screen bg-zinc-900 text-white flex flex-col items-center p-2 sm:p-4">
+    <div class="min-h-screen max-w-screen w-full bg-zinc-900 text-white flex flex-col items-center p-2 sm:p-4">
       <header class="text-2xl sm:text-3xl font-bold text-center text-white mb-2 sm:mb-4">
         <span class="text-red-500 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">K</span>
         <span class="text-black [text-shadow:_2px_2px_4px_rgb(255_255_255_/_40%)]">A</span>
@@ -8,12 +8,12 @@
         <span class="text-green-500 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">A</span>
       </header>
   
-      <div class="grid grid-rows-6 gap-1 sm:gap-2">
+      <div class="grid grid-rows-6 gap-1 sm:gap-2 min-h-[70vh]">
         <div v-for="(guessRow, rowIndex) in 6" :key="rowIndex" class="grid grid-cols-5 gap-1 sm:gap-2">
           <div
             v-for="colIndex in 5"
             :key="colIndex"
-            class="w-10 h-10 sm:w-14 sm:h-14 border-2 text-xl sm:text-2xl flex items-center justify-center font-bold uppercase transition-all duration-500 ease-in-out transform"
+            class="w-10 h-10 sm:w-14 sm:h-14 lg:w-25 lg:h-25 border-2 text-xl sm:text-2xl flex items-center justify-center font-bold uppercase transition-all duration-500 ease-in-out transform"
             :class="[getBoxClass(rowIndex, colIndex - 1), getFlipClass(rowIndex, colIndex - 1)]"
           >
             {{ getLetterDisplay(rowIndex, colIndex - 1) }}
@@ -21,7 +21,7 @@
         </div>
       </div>
   
-      <div class="mt-4 sm:mt-6 space-y-1 sm:space-y-2 text-center w-full max-w-[350px] sm:max-w-[500px] px-2">
+      <div class="mt-5 sm:mt-6 space-y-1 sm:space-y-2 text-center sm:max-w-[500px] px-2 w-full lg:w-full">
         <div class="flex justify-center gap-0.5 sm:gap-1">
           <button
             v-for="key in 'QWERTYUIOP'.split('')"
@@ -219,7 +219,7 @@
   <style scoped>
   .key {
     min-width: 1.75rem;
-    padding: 0.25rem 0.5rem;
+    padding: 0.5rem 0.75rem;
     border-radius: 0.25rem;
     font-weight: bold;
     font-size: 0.75rem;
@@ -234,6 +234,14 @@
       font-size: 0.875rem;
     }
   }
+
+    @media (min-width: 1024px) {
+        .key {
+        min-width: 3rem;
+        padding: 0.5rem 0.75rem;
+        font-size: 1rem;
+        }
+    }
   
   .key:hover {
     background-color: #3b3b42;
