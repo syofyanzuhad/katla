@@ -2,11 +2,18 @@
     <div class="min-h-screen max-w-screen w-full bg-zinc-900 text-white flex flex-col items-center p-2 sm:p-4">
       <header class="text-2xl sm:text-3xl font-bold text-center text-white mb-2 sm:mb-4">
         <span class="text-red-500 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">K</span>
-        <span class="text-black [text-shadow:_2px_2px_4px_rgb(255_255_255_/_40%)]">A</span>
-        <span class="text-white [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">T</span>
+        <span class="text-red-500 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">A</span>
+        <span class="text-black [text-shadow:_2px_2px_4px_rgb(255_255_255_/_40%)]">T</span>
+        <span class="text-white [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">L</span>
         <span class="text-green-500 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">L</span>
         <span class="text-green-500 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">A</span>
       </header>
+        <div class="text-sm sm:text-base text-zinc-400 mb-2 sm:mb-4">
+            <p>Selamat datang di permainan kata!</p>
+            <p>Masukkan kata 5 huruf dan tekan ENTER.</p>
+            <p>🟩: huruf dan posisi benar, 🟨: huruf benar posisi salah, ⬜️: huruf dan posisi salah</p>
+            <p>Gunakan tombol keyboard atau klik tombol di bawah untuk memasukkan huruf.</p>
+        </div>
   
       <div class="grid grid-rows-6 gap-1 sm:gap-2 min-h-[50vh] lg:min-h-[60vh]">
         <div v-for="(guessRow, rowIndex) in 6" :key="rowIndex" class="grid grid-cols-5 gap-1 sm:gap-2">
