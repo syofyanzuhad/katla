@@ -12,7 +12,6 @@
           <p>Selamat datang di permainan kata!</p>
           <p>Masukkan kata 5 huruf dan tekan ENTER.</p>
           <p>🟩: huruf dan posisi benar, 🟨: huruf benar posisi salah, ⬜️: huruf dan posisi salah</p>
-          <p>Gunakan tombol keyboard atau klik tombol di bawah untuk memasukkan huruf.</p>
       </div>
 
     <div class="grid grid-rows-6 gap-1 sm:gap-2 min-h-[50vh] lg:min-h-[60vh]">
