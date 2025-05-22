@@ -73,7 +73,7 @@
     </div>
 
     <!-- footer -->
-    <p>
+    <p class="mt-3 text-xs sm:text-sm text-zinc-400">
       Katla by <a href="//syofyanzuhad.dev" target="_blank" class="text-blue-500 hover:text-blue-400 transition duration-200">Syofyan Zuhad</a>
     </p>
   </div>
