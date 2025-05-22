@@ -32,7 +32,7 @@
       </div>
     </div>
 
-  <p class="mt-3 text-xs sm:text-sm text-zinc-400">{{ message }}</p>
+  <p class="mt-3 text-xs sm:text-sm text-zinc-400" v-html="message"></p>
 
     <div class="mt-3 sm:mt-4 space-y-1 sm:space-y-2 text-center sm:max-w-[500px] px-2 w-full lg:w-full">
       <div class="flex justify-center gap-0.5 sm:gap-1">
@@ -138,13 +138,13 @@
     currentGuess.value = ''
 
     if (guess === targetWord.value) {
-      message.value = '🎉 Selamat! Kamu menang!'
+      message.value = `🎉 Selamat! Kamu menang! Cek artinya di <a href="https://kbbi.kemdikbud.go.id/entri/${targetWord.value}" target="_blank" class="text-blue-500 hover:text-blue-400 transition duration-200">KBBI</a>`
       gameOver.value = true
       return
     }
 
     if (guesses.value.length >= maxAttempts) {
-      message.value = `😢 Kamu kalah. Kata: ${targetWord.value.toUpperCase()}`
+      message.value = `😢 Kamu kalah. Kata: ${targetWord.value.toUpperCase()} - <a href="https://kbbi.kemdikbud.go.id/entri/${targetWord.value}" target="_blank" class="text-blue-500 hover:text-blue-400 transition duration-200">Lihat di KBBI</a>`
       gameOver.value = true
     }
   }
