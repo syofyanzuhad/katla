@@ -73,7 +73,7 @@
 
     <!-- footer -->
     <p class="mt-3 text-xs sm:text-sm text-zinc-400">
-      Katla by <a href="//syofyanzuhad.dev" target="_blank" class="text-blue-500 hover:text-blue-400 transition duration-200">Syofyan Zuhad</a>
+      Katla by <a href="//syofyanzuhad.dev" target="_blank" class="text-blue-400 hover:text-blue-300 transition duration-200">Syofyan Zuhad</a>
     </p>
   </div>
 </template>
@@ -89,7 +89,9 @@
   const maxAttempts = 6
   const gameOver = ref(false)
   const message = ref('')
-  const audio = new Audio('https://www.soundjay.com/button/sounds/button-16.mp3')
+  const audio = new Audio('/button-16a.mp3')
+  const successAudio = new Audio('/goodresult-82807.mp3')
+  const errorAudio = new Audio('/error-10-206498.mp3')
   const shakeRowIndex = ref(null)
 
   const usedKeys = ref({})
@@ -101,7 +103,7 @@
       validWords.value = data.words
       // Select a random word as target
       targetWord.value = validWords.value[Math.floor(Math.random() * validWords.value.length)]
-      // console.log(targetWord.value)
+      console.log(targetWord.value)
     } catch (error) {
       console.error('Error loading words:', error)
       message.value = 'Error loading words. Please refresh the page.'
@@ -113,6 +115,8 @@
       message.value = 'Kata harus 5 huruf.'
       shakeRowIndex.value = guesses.value.length
       resetShake()
+      errorAudio.currentTime = 0
+      errorAudio.play()
       return
     }
 
@@ -121,6 +125,8 @@
       message.value = 'Kata tidak ada dalam kamus.'
       shakeRowIndex.value = guesses.value.length
       resetShake()
+      errorAudio.currentTime = 0
+      errorAudio.play()
       return
     }
 
@@ -143,6 +149,7 @@
     if (guess === targetWord.value) {
       message.value = `🎉 Selamat! Kamu menang! Cek artinya di <a href="https://kbbi.kemdikbud.go.id/entri/${targetWord.value}" target="_blank" class="text-blue-500 hover:text-blue-400 transition duration-200">KBBI</a>`
       gameOver.value = true
+      successAudio.play()
       confetti({
         particleCount: 100,
         spread: 70,
@@ -160,17 +167,21 @@
   function pressKey(key) {
     if (gameOver.value || currentGuess.value.length >= 5 || guesses.value.length >= maxAttempts) return
     currentGuess.value += key.toLowerCase()
-    playSound()
+    audio.currentTime = 0
+    audio.play()
   }
 
   function pressBackspace() {
     if (currentGuess.value.length > 0 && !gameOver.value) {
       currentGuess.value = currentGuess.value.slice(0, -1)
     }
+    audio.currentTime = 0
+    audio.play()
   }
 
   function pressEnter() {
     if (!gameOver.value) submitGuess()
+    audio.currentTime = 0
   }
 
   function resetShake() {
@@ -217,7 +228,6 @@
     const guessRow = guesses.value[row]
     if (!guessRow) return 'border-zinc-600'
 
-    const guess = guessRow.join('')
     const statuses = getLetterStatuses(guessRow, targetWord.value.split(''))
     const status = statuses[col]
 
@@ -242,12 +252,6 @@
       'bg-zinc-700 text-white': status === 'absent',
       'bg-zinc-600 text-white': !status
     }
-  }
-
-  function playSound() {
-    if (audio.paused) return
-    audio.currentTime = 0
-    audio.play()
   }
 
   function handlePhysicalKeyboard(e) {
