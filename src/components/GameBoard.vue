@@ -104,7 +104,7 @@
       validWords.value = data.words
       // Select a random word as target
       targetWord.value = validWords.value[Math.floor(Math.random() * validWords.value.length)]
-      console.log(targetWord.value)
+      // console.log(targetWord.value)
     } catch (error) {
       console.error('Error loading words:', error)
       message.value = 'Error loading words. Please refresh the page.'
@@ -158,7 +158,7 @@
       })
       return
     } else {
-      console.log('flip')
+      // console.log('flip')
       flipAudio.currentTime = 0
       flipAudio.play()
     }
