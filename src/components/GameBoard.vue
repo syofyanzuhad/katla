@@ -80,6 +80,7 @@
 
 <script setup>
   import { ref, onMounted, onUnmounted } from 'vue'
+  import confetti from 'canvas-confetti'
 
   const targetWord = ref('')
   const validWords = ref([])
@@ -142,6 +143,11 @@
     if (guess === targetWord.value) {
       message.value = `🎉 Selamat! Kamu menang! Cek artinya di <a href="https://kbbi.kemdikbud.go.id/entri/${targetWord.value}" target="_blank" class="text-blue-500 hover:text-blue-400 transition duration-200">KBBI</a>`
       gameOver.value = true
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 }
+      })
       return
     }
 
