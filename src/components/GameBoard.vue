@@ -100,6 +100,7 @@
       validWords.value = data.words
       // Select a random word as target
       targetWord.value = validWords.value[Math.floor(Math.random() * validWords.value.length)]
+      // console.log(targetWord.value)
     } catch (error) {
       console.error('Error loading words:', error)
       message.value = 'Error loading words. Please refresh the page.'
@@ -123,13 +124,15 @@
     }
 
     const guessArray = guess.split('')
+    const statuses = getLetterStatuses(guessArray, targetWord.value.split(''))
     guesses.value.push(guessArray)
-    guessArray.forEach((letter, index) => {
-      if (targetWord.value[index] === letter) {
+
+    guessArray.forEach((letter, i) => {
+      if (statuses[i] === 'correct') {
         usedKeys.value[letter] = 'correct'
-      } else if (targetWord.value.includes(letter)) {
-        if (usedKeys.value[letter] !== 'correct') usedKeys.value[letter] = 'present'
-      } else {
+      } else if (statuses[i] === 'present' && usedKeys.value[letter] !== 'correct') {
+        usedKeys.value[letter] = 'present'
+      } else if (!usedKeys.value[letter]) {
         usedKeys.value[letter] = 'absent'
       }
     })
@@ -177,19 +180,45 @@
     return guesses.value[row]?.[col]?.toUpperCase() || ''
   }
 
+  function getLetterStatuses(guess, target) {
+    const statuses = Array(5).fill('absent')
+    const targetUsed = Array(5).fill(false)
+
+    // First pass: correct letters
+    for (let i = 0; i < 5; i++) {
+      if (guess[i] === target[i]) {
+        statuses[i] = 'correct'
+        targetUsed[i] = true
+      }
+    }
+
+    // Second pass: present letters
+    for (let i = 0; i < 5; i++) {
+      if (statuses[i] === 'correct') continue
+      for (let j = 0; j < 5; j++) {
+        if (!targetUsed[j] && guess[i] === target[j]) {
+          statuses[i] = 'present'
+          targetUsed[j] = true
+          break
+        }
+      }
+    }
+
+    return statuses
+  }
+
   function getBoxClass(row, col) {
     const guessRow = guesses.value[row]
     if (!guessRow) return 'border-zinc-600'
 
-    const letter = guessRow[col]
-    const correctLetter = targetWord.value[col]
-    const isCorrect = letter === correctLetter
-    const isPresent = !isCorrect && targetWord.value.includes(letter)
+    const guess = guessRow.join('')
+    const statuses = getLetterStatuses(guessRow, targetWord.value.split(''))
+    const status = statuses[col]
 
     return {
-      'bg-green-600 border-green-600 text-white': isCorrect,
-      'bg-yellow-500 border-yellow-500 text-white': isPresent,
-      'bg-zinc-700 border-zinc-700 text-white': !isCorrect && !isPresent,
+      'bg-green-600 border-green-600 text-white': status === 'correct',
+      'bg-yellow-500 border-yellow-500 text-white': status === 'present',
+      'bg-zinc-700 border-zinc-700 text-white': status === 'absent'
     }
   }
 
