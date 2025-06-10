@@ -92,6 +92,7 @@
   const audio = new Audio('/button-16a.mp3')
   const successAudio = new Audio('/goodresult-82807.mp3')
   const errorAudio = new Audio('/error-10-206498.mp3')
+  const flipAudio = new Audio('/pageturn-102978.mp3')
   const shakeRowIndex = ref(null)
 
   const usedKeys = ref({})
@@ -156,6 +157,10 @@
         origin: { y: 0.6 }
       })
       return
+    } else {
+      console.log('flip')
+      flipAudio.currentTime = 0
+      flipAudio.play()
     }
 
     if (guesses.value.length >= maxAttempts) {
