@@ -1,9 +1,11 @@
 <script setup>
 import GameBoard from './components/GameBoard.vue'
+import PwaInstallBanner from './components/PwaInstallBanner.vue'
 </script>
 
 <template>
   <GameBoard />
+  <PwaInstallBanner />
 </template>
 
 <style scoped>
