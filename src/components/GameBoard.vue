@@ -102,7 +102,10 @@
 
 <!-- Modal Pop Up -->
 <div v-if="showModal" class="fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2">
-  <div class="bg-white text-black rounded-lg shadow-lg p-6 max-w-xs w-full text-center">
+  <div class="bg-white text-black rounded-lg shadow-lg p-6 max-w-xs w-full text-center relative">
+    <button @click="showModal = false" aria-label="Tutup" class="absolute top-2 right-2 text-xl text-zinc-500 hover:text-zinc-800 transition p-1 rounded-full focus:outline-none">
+      &times;
+    </button>
     <h2 class="text-xl font-bold mb-2">
       {{ lastResult === 'win' ? '🎉 Selamat!' : '😢 Kamu kalah.' }}
     </h2>
@@ -115,7 +118,7 @@
       <a :href="`/kbbi/${targetWord}`" class="text-blue-500 hover:text-blue-400 transition duration-200">Lihat di KBBI</a>
     </p>
     <button @click="shareResult" class="mt-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition cursor-pointer">Salin Hasil</button>
-    <button @click="showModal = false" class="ml-1 mt-4 px-4 py-2 bg-zinc-800 text-white rounded hover:bg-zinc-700 transition cursor-pointer">Tutup</button>
+    <button @click="resetGame" class="ml-1 mt-4 px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 transition cursor-pointer">Reset</button>
     <div v-if="showShareMsg" class="mt-2 text-green-700 text-sm">Hasil disalin ke clipboard!</div>
     <p class="text-sm mt-4">Bagikan ke:</p>
     <div class="flex justify-center gap-2 mt-4">
@@ -411,6 +414,19 @@
     window.removeEventListener('keydown', handlePhysicalKeyboard)
     if (warnInterval) clearInterval(warnInterval)
   })
+
+  function resetGame() {
+    guesses.value = []
+    currentGuess.value = ''
+    gameOver.value = false
+    message.value = ''
+    usedKeys.value = {}
+    showModal.value = false
+    lastResult.value = ''
+    showShareMsg.value = false
+    shakeRowIndex.value = null
+    loadWords()
+  }
 </script>
 
 <style scoped>
