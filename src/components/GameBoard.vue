@@ -217,6 +217,7 @@
       resetShake()
       errorAudio.currentTime = 0
       errorAudio.play()
+      if (navigator.vibrate) navigator.vibrate(150)
       return
     }
 
@@ -227,6 +228,7 @@
       resetShake()
       errorAudio.currentTime = 0
       errorAudio.play()
+      if (navigator.vibrate) navigator.vibrate(150)
       return
     }
 
@@ -279,6 +281,7 @@
     audio.play()
     pressedKey.value = key.toLowerCase()
     setTimeout(() => { pressedKey.value = '' }, 120)
+    if (navigator.vibrate) navigator.vibrate(30)
   }
 
   function pressBackspace() {
@@ -289,6 +292,7 @@
     audio.play()
     pressedKey.value = 'backspace'
     setTimeout(() => { pressedKey.value = '' }, 120)
+    if (navigator.vibrate) navigator.vibrate(30)
   }
 
   function pressEnter() {
@@ -296,6 +300,7 @@
     audio.currentTime = 0
     pressedKey.value = 'enter'
     setTimeout(() => { pressedKey.value = '' }, 120)
+    if (navigator.vibrate) navigator.vibrate(30)
   }
 
   function resetShake() {
