@@ -181,8 +181,7 @@
       validWords.value = data.words
       // Select a random word as target
       targetWord.value = validWords.value[Math.floor(Math.random() * validWords.value.length)]
-      console.log('%csrc/components/GameBoard.vue:164 targetWord.value', 'color: #007acc;', targetWord.value);
-      // console.log(targetWord.value)
+      // console.log('%csrc/components/GameBoard.vue:164 targetWord.value', 'color: #007acc;', targetWord.value);
     } catch (error) {
       console.error('Error loading words:', error)
       message.value = 'Error loading words. Please refresh the page.'
