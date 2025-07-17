@@ -39,8 +39,11 @@
           v-for="key in 'QWERTYUIOP'.split('')"
           :key="key"
           class="key"
-          :class="getKeyClass(key.toLowerCase())"
+          :class="[getKeyClass(key.toLowerCase()), { 'key-pressed': pressedKey === key.toLowerCase() }]"
           @click="pressKey(key)"
+          @mousedown="pressedKey = key.toLowerCase()"
+          @mouseup="pressedKey = ''"
+          @mouseleave="pressedKey = ''"
         >
           {{ key }}
         </button>
@@ -50,24 +53,42 @@
           v-for="key in 'ASDFGHJKL'.split('')"
           :key="key"
           class="key"
-          :class="getKeyClass(key.toLowerCase())"
+          :class="[getKeyClass(key.toLowerCase()), { 'key-pressed': pressedKey === key.toLowerCase() }]"
           @click="pressKey(key)"
+          @mousedown="pressedKey = key.toLowerCase()"
+          @mouseup="pressedKey = ''"
+          @mouseleave="pressedKey = ''"
         >
           {{ key }}
         </button>
       </div>
       <div class="flex justify-center gap-0.5 sm:gap-1">
-        <button class="key bg-zinc-600" @click="pressEnter">ENTER</button>
+        <button class="key bg-zinc-600"
+          @click="pressEnter"
+          :class="{ 'key-pressed': pressedKey === 'enter' }"
+          @mousedown="pressedKey = 'enter'"
+          @mouseup="pressedKey = ''"
+          @mouseleave="pressedKey = ''"
+        >ENTER</button>
         <button
           v-for="key in 'ZXCVBNM'.split('')"
           :key="key"
           class="key"
-          :class="getKeyClass(key.toLowerCase())"
+          :class="[getKeyClass(key.toLowerCase()), { 'key-pressed': pressedKey === key.toLowerCase() }]"
           @click="pressKey(key)"
+          @mousedown="pressedKey = key.toLowerCase()"
+          @mouseup="pressedKey = ''"
+          @mouseleave="pressedKey = ''"
         >
           {{ key }}
         </button>
-        <button class="key bg-zinc-600" @click="pressBackspace">⌫</button>
+        <button class="key bg-zinc-600"
+          @click="pressBackspace"
+          :class="{ 'key-pressed': pressedKey === 'backspace' }"
+          @mousedown="pressedKey = 'backspace'"
+          @mouseup="pressedKey = ''"
+          @mouseleave="pressedKey = ''"
+        >⌫</button>
       </div>
     </div>
 
@@ -173,6 +194,7 @@
   }
 
   const usedKeys = ref({})
+  const pressedKey = ref('')
 
   async function loadWords() {
     try {
@@ -255,6 +277,8 @@
     currentGuess.value += key.toLowerCase()
     audio.currentTime = 0
     audio.play()
+    pressedKey.value = key.toLowerCase()
+    setTimeout(() => { pressedKey.value = '' }, 120)
   }
 
   function pressBackspace() {
@@ -263,11 +287,15 @@
     }
     audio.currentTime = 0
     audio.play()
+    pressedKey.value = 'backspace'
+    setTimeout(() => { pressedKey.value = '' }, 120)
   }
 
   function pressEnter() {
     if (!gameOver.value) submitGuess()
     audio.currentTime = 0
+    pressedKey.value = 'enter'
+    setTimeout(() => { pressedKey.value = '' }, 120)
   }
 
   function resetShake() {
@@ -347,8 +375,12 @@
 
     if (key === 'enter') {
       pressEnter()
+      pressedKey.value = 'enter'
+      setTimeout(() => { pressedKey.value = '' }, 120)
     } else if (key === 'backspace') {
       pressBackspace()
+      pressedKey.value = 'backspace'
+      setTimeout(() => { pressedKey.value = '' }, 120)
     } else if (/^[a-z]$/.test(key)) {
       pressKey(key)
     }
@@ -441,4 +473,10 @@
 .animate-shake {
   animation: shake 0.5s ease-in-out;
 }
+
+  .key-pressed {
+    filter: brightness(0.8);
+    transform: scale(0.95);
+    transition: filter 0.05s, transform 0.05s;
+  }
 </style>
