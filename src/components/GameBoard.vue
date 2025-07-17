@@ -76,6 +76,33 @@
       Katla by <a href="//syofyanzuhad.dev" target="_blank" class="text-blue-400 hover:text-blue-300 transition duration-200">Syofyan Zuhad</a>
     </p>
   </div>
+
+<!-- Modal Pop Up -->
+<div v-if="showModal" class="fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2">
+  <div class="bg-white text-black rounded-lg shadow-lg p-6 max-w-xs w-full text-center">
+    <h2 class="text-xl font-bold mb-2">
+      {{ lastResult === 'win' ? '🎉 Selamat!' : '😢 Kamu kalah.' }}
+    </h2>
+    <p v-if="lastResult === 'win'">
+      Kamu menang!<br>
+      <a :href="`https://kbbi.kemdikbud.go.id/entri/${targetWord}`" target="_blank" class="text-blue-500 hover:text-blue-400 transition duration-200">Cek artinya di KBBI</a>
+    </p>
+    <p v-else>
+      Kata: <span class="font-mono font-bold">{{ targetWord.toUpperCase() }}</span><br>
+      <a :href="`https://kbbi.kemdikbud.go.id/entri/${targetWord}`" target="_blank" class="text-blue-500 hover:text-blue-400 transition duration-200">Lihat di KBBI</a>
+    </p>
+    <button @click="shareResult" class="mt-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition cursor-pointer">Salin Hasil</button>
+    <button @click="showModal = false" class="ml-1 mt-4 px-4 py-2 bg-zinc-800 text-white rounded hover:bg-zinc-700 transition cursor-pointer">Tutup</button>
+    <div v-if="showShareMsg" class="mt-2 text-green-700 text-sm">Hasil disalin ke clipboard!</div>
+    <p class="text-sm mt-4">Bagikan ke:</p>
+    <div class="flex justify-center gap-2 mt-4">
+      <!-- bagikan ke -->
+      <button @click="openShare('whatsapp')" class="px-3 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition cursor-pointer text-sm">WhatsApp</button>
+      <button @click="openShare('twitter')" class="px-3 py-2 bg-blue-400 text-white rounded hover:bg-blue-500 transition cursor-pointer text-sm">Twitter</button>
+      <button @click="openShare('telegram')" class="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition cursor-pointer text-sm">Telegram</button>
+    </div>
+  </div>
+</div>
 </template>
 
 <script setup>
@@ -95,6 +122,56 @@
   const flipAudio = new Audio('/pageturn-102978.mp3')
   const shakeRowIndex = ref(null)
 
+  const showModal = ref(false)
+  const lastResult = ref('') // 'win' atau 'lose'
+  const showShareMsg = ref(false)
+
+  function getShareEmoji(status) {
+    if (status === 'correct') return '🟩'
+    if (status === 'present') return '🟨'
+    return '⬜️'
+  }
+
+  function generateShareText() {
+    let text = `Katla ${lastResult.value === 'win' ? guesses.value.length : 'X'}/${maxAttempts}\n\n`
+    for (let i = 0; i < guesses.value.length; i++) {
+      const guess = guesses.value[i]
+      const statuses = getLetterStatuses(guess, targetWord.value.split(''))
+      text += statuses.map(getShareEmoji).join('') + '\n'
+    }
+    if (lastResult.value === 'win') {
+      text += '\n🎉 Selamat!'
+    } else {
+      text += `\nKata: ${targetWord.value.toUpperCase()}`
+    }
+    text += `\n${window.location.href}`
+    return text
+  }
+
+  async function shareResult() {
+    const text = generateShareText()
+    try {
+      await navigator.clipboard.writeText(text)
+      showShareMsg.value = true
+      setTimeout(() => showShareMsg.value = false, 2000)
+    } catch (e) {
+      alert('Gagal menyalin hasil ke clipboard')
+    }
+  }
+
+  function openShare(app) {
+    const text = encodeURIComponent(generateShareText())
+    let url = ''
+    if (app === 'whatsapp') {
+      url = `https://wa.me/?text=${text}`
+    } else if (app === 'twitter') {
+      url = `https://twitter.com/intent/tweet?text=${text}`
+    } else if (app === 'telegram') {
+      url = `https://t.me/share/url?text=${text}`
+    }
+    window.open(url, '_blank')
+  }
+
   const usedKeys = ref({})
 
   async function loadWords() {
@@ -104,6 +181,7 @@
       validWords.value = data.words
       // Select a random word as target
       targetWord.value = validWords.value[Math.floor(Math.random() * validWords.value.length)]
+      console.log('%csrc/components/GameBoard.vue:164 targetWord.value', 'color: #007acc;', targetWord.value);
       // console.log(targetWord.value)
     } catch (error) {
       console.error('Error loading words:', error)
@@ -150,6 +228,8 @@
     if (guess === targetWord.value) {
       message.value = `🎉 Selamat! Kamu menang! Cek artinya di <a href="https://kbbi.kemdikbud.go.id/entri/${targetWord.value}" target="_blank" class="text-blue-500 hover:text-blue-400 transition duration-200">KBBI</a>`
       gameOver.value = true
+      showModal.value = true
+      lastResult.value = 'win'
       successAudio.play()
       confetti({
         particleCount: 100,
@@ -166,6 +246,8 @@
     if (guesses.value.length >= maxAttempts) {
       message.value = `😢 Kamu kalah. Kata: ${targetWord.value.toUpperCase()} - <a href="https://kbbi.kemdikbud.go.id/entri/${targetWord.value}" target="_blank" class="text-blue-500 hover:text-blue-400 transition duration-200">Lihat di KBBI</a>`
       gameOver.value = true
+      showModal.value = true
+      lastResult.value = 'lose'
     }
   }
 
