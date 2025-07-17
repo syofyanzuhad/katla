@@ -354,13 +354,23 @@
     }
   }
 
+  // let warnInterval = null
   onMounted(() => {
     loadWords()
     window.addEventListener('keydown', handlePhysicalKeyboard)
+    // Peringatan untuk tidak mencari jawaban di console
+    // Langsung tampilkan sekali
+    console.warn('%cJangan curang!','color: red; font-size: 2em; font-weight: bold;')
+    console.warn('%cMencontek jawaban di console mengurangi keseruan bermain Katla. Cobalah tebak sendiri dulu!','color: orange; font-size: 1.2em;')
+    // warnInterval = setInterval(() => {
+    //   console.warn('%cJangan curang!','color: red; font-size: 2em; font-weight: bold;')
+    //   console.warn('%cMencontek jawaban di console mengurangi keseruan bermain Katla. Cobalah tebak sendiri dulu!','color: orange; font-size: 1.2em;')
+    // }, 1000)
   })
 
   onUnmounted(() => {
     window.removeEventListener('keydown', handlePhysicalKeyboard)
+    if (warnInterval) clearInterval(warnInterval)
   })
 </script>
 
