@@ -9,9 +9,11 @@
       <span class="text-green-500 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">A</span>
     </header>
       <div class="text-sm sm:text-base text-zinc-400 mb-2 sm:mb-4">
-          <p>Selamat datang di permainan kata!</p>
-          <p>Masukkan kata 5 huruf dan tekan ENTER.</p>
-          <p>🟩: huruf dan posisi benar, 🟨: huruf benar posisi salah, ⬜️: huruf dan posisi salah</p>
+        <ul class="list-disc list-inside">
+          <li>Selamat datang di permainan tebak kata!</li>
+          <li>Masukkan kata dengan 5 huruf dan tekan ENTER.</li>
+          <li>🟩: huruf dan posisi benar, 🟨: huruf benar posisi salah, ⬜️: huruf dan posisi salah</li>
+        </ul>
       </div>
 
     <div class="grid grid-rows-6 gap-1 sm:gap-2 min-h-[50vh] lg:min-h-[60vh]">
