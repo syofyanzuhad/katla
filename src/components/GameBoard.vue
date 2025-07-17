@@ -106,11 +106,11 @@
     </h2>
     <p v-if="lastResult === 'win'">
       Kamu menang!<br>
-      <a :href="`https://kbbi.kemdikbud.go.id/entri/${targetWord}`" target="_blank" class="text-blue-500 hover:text-blue-400 transition duration-200">Cek artinya di KBBI</a>
+      <a :href="`/kbbi/${targetWord}`" class="text-blue-500 hover:text-blue-400 transition duration-200">Cek artinya di KBBI</a>
     </p>
     <p v-else>
       Kata: <span class="font-mono font-bold">{{ targetWord.toUpperCase() }}</span><br>
-      <a :href="`https://kbbi.kemdikbud.go.id/entri/${targetWord}`" target="_blank" class="text-blue-500 hover:text-blue-400 transition duration-200">Lihat di KBBI</a>
+      <a :href="`/kbbi/${targetWord}`" class="text-blue-500 hover:text-blue-400 transition duration-200">Lihat di KBBI</a>
     </p>
     <button @click="shareResult" class="mt-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition cursor-pointer">Salin Hasil</button>
     <button @click="showModal = false" class="ml-1 mt-4 px-4 py-2 bg-zinc-800 text-white rounded hover:bg-zinc-700 transition cursor-pointer">Tutup</button>

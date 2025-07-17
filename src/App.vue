@@ -4,7 +4,7 @@ import PwaInstallBanner from './components/PwaInstallBanner.vue'
 </script>
 
 <template>
-  <GameBoard />
+  <router-view />
   <PwaInstallBanner />
 </template>
 
