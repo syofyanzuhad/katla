@@ -33,7 +33,10 @@
       </div>
     </div>
 
-  <p class="mt-3 text-xs sm:text-sm text-zinc-400" v-html="message"></p>
+  <!-- Toast -->
+  <div v-if="toast.show" class="fixed left-1/2 top-1/4 z-50 -translate-x-1/2 -translate-y-1/2 bg-zinc-800 text-white px-4 py-2 rounded-lg shadow-lg transition-all duration-300" :class="toast.type === 'error' ? 'bg-red-600' : 'bg-zinc-800'">
+    <div v-html="toast.message"></div>
+  </div>
 
     <div class="mt-3 sm:mt-4 space-y-1 sm:space-y-2 text-center sm:max-w-[500px] px-2 w-full lg:w-full">
       <div class="flex justify-center gap-0.5 sm:gap-1">
@@ -151,6 +154,7 @@
   const showModal = ref(false)
   const lastResult = ref('') // 'win' atau 'lose'
   const showShareMsg = ref(false)
+  const toast = ref({ show: false, message: '', type: 'info' })
 
   function getShareEmoji(status) {
     if (status === 'correct') return '🟩'
@@ -215,9 +219,16 @@
     }
   }
 
+  function showToast(message, type = 'info', duration = 3000) {
+    toast.value = { show: true, message, type }
+    setTimeout(() => {
+      toast.value.show = false
+    }, duration)
+  }
+
   function submitGuess() {
     if (currentGuess.value.length !== 5) {
-      message.value = 'Kata harus 5 huruf.'
+      showToast('Kata harus 5 huruf.', 'error')
       shakeRowIndex.value = guesses.value.length
       resetShake()
       errorAudio.currentTime = 0
@@ -228,7 +239,7 @@
 
     const guess = currentGuess.value.toLowerCase()
     if (!validWords.value.includes(guess)) {
-      message.value = 'Kata tidak ada dalam kamus.'
+      showToast('Kata tidak ada dalam kamus.', 'error')
       shakeRowIndex.value = guesses.value.length
       resetShake()
       errorAudio.currentTime = 0
@@ -254,7 +265,7 @@
     currentGuess.value = ''
 
     if (guess === targetWord.value) {
-      message.value = `🎉 Selamat! Kamu menang! Cek artinya di <a href="https://kbbi.kemdikbud.go.id/entri/${targetWord.value}" target="_blank" class="text-blue-500 hover:text-blue-400 transition duration-200">KBBI</a>`
+      showToast(`🎉 Selamat! Kamu menang! Cek artinya di <a href="/kbbi/${targetWord.value}" class="text-blue-400 hover:text-blue-300 transition duration-200">KBBI</a>`, 'success')
       gameOver.value = true
       showModal.value = true
       lastResult.value = 'win'
@@ -272,7 +283,7 @@
     }
 
     if (guesses.value.length >= maxAttempts) {
-      message.value = `😢 Kamu kalah. Kata: ${targetWord.value.toUpperCase()} - <a href="https://kbbi.kemdikbud.go.id/entri/${targetWord.value}" target="_blank" class="text-blue-500 hover:text-blue-400 transition duration-200">Lihat di KBBI</a>`
+      showToast(`😢 Kamu kalah. Kata: ${targetWord.value.toUpperCase()} - <a href="/kbbi/${targetWord.value}" class="text-blue-400 hover:text-blue-300 transition duration-200">Lihat di KBBI</a>`, 'error')
       gameOver.value = true
       showModal.value = true
       lastResult.value = 'lose'
@@ -419,7 +430,7 @@
     guesses.value = []
     currentGuess.value = ''
     gameOver.value = false
-    message.value = ''
+    toast.value = { show: false, message: '', type: 'info' }
     usedKeys.value = {}
     showModal.value = false
     lastResult.value = ''
