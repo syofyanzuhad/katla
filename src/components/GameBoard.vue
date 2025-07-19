@@ -34,7 +34,7 @@
     </div>
 
   <!-- Toast -->
-  <div class="fixed left-1/2 top-1/4 z-50 -translate-x-1/2 -translate-y-1/2 bg-zinc-800 text-white px-4 py-2 rounded-lg shadow-lg w-full max-w-xs transition-all duration-300" :class="toast.type === 'error' ? 'bg-red-600' : 'bg-zinc-800'">
+  <div v-if="toast.show" class="fixed left-1/2 top-1/4 z-50 -translate-x-1/2 -translate-y-1/2 bg-zinc-800 text-white px-4 py-2 rounded-lg shadow-lg w-full max-w-xs transition-all duration-300" :class="toast.type === 'error' ? 'bg-red-600' : 'bg-zinc-800'">
     <div v-html="toast.message"></div>
   </div>
 
