@@ -1,18 +1,56 @@
 <template>
   <div class="min-h-screen max-w-screen w-full bg-zinc-900 text-white flex flex-col items-center p-2 sm:p-4">
-    <header class="text-2xl sm:text-3xl font-bold text-center text-white mb-2 sm:mb-4">
-      <span class="text-red-500 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">K</span>
-      <span class="text-red-500 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">A</span>
-      <span class="text-black [text-shadow:_2px_2px_4px_rgb(255_255_255_/_40%)]">T</span>
-      <span class="text-white [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">L</span>
-      <span class="text-green-500 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">L</span>
-      <span class="text-green-500 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">A</span>
+    <header class="w-full max-w-2xl relative mb-2 sm:mb-4">
+      <div class="text-2xl sm:text-3xl font-bold text-center text-white">
+        <span class="text-red-500 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">K</span>
+        <span class="text-red-500 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">A</span>
+        <span class="text-black [text-shadow:_2px_2px_4px_rgb(255_255_255_/_40%)]">T</span>
+        <span class="text-white [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">L</span>
+        <span class="text-green-500 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">L</span>
+        <span class="text-green-500 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">A</span>
+      </div>
+      <button
+        @click="openStats"
+        class="absolute right-0 top-1/2 -translate-y-1/2 px-3 py-2 bg-zinc-700 hover:bg-zinc-600 rounded text-sm transition"
+        aria-label="Lihat Statistik"
+      >
+        📊
+      </button>
     </header>
+
+    <!-- Win Streak Display -->
+    <div v-if="userStats.currentStreak > 1" class="mb-2 px-4 py-2 bg-gradient-to-r from-yellow-600 to-orange-600 rounded-lg shadow-lg animate-pulse-subtle">
+      <div class="flex items-center justify-center gap-2 text-white">
+        <span class="text-xl">🔥</span>
+        <span class="font-bold text-lg">{{ userStats.currentStreak }} Win Streak!</span>
+        <span class="text-xl">🔥</span>
+      </div>
+      <div v-if="userStats.currentStreak === userStats.maxStreak && userStats.maxStreak > 1" class="text-xs text-center text-yellow-200 mt-1">
+        🏆 Personal Best!
+      </div>
+    </div>
+
+    <!-- Quick Stats Bar -->
+    <div class="mb-3 flex gap-3 text-xs sm:text-sm text-zinc-400">
+      <div class="flex items-center gap-1">
+        <span class="text-zinc-500">🎮</span>
+        <span>{{ userStats.totalGames }} main</span>
+      </div>
+      <div class="flex items-center gap-1">
+        <span class="text-green-500">✓</span>
+        <span>{{ userStats.wins }} menang</span>
+      </div>
+      <div class="flex items-center gap-1">
+        <span class="text-zinc-500">%</span>
+        <span>{{ getWinRateDisplay() }}% win rate</span>
+      </div>
+    </div>
+
       <div class="text-sm sm:text-base text-zinc-400 mb-2 sm:mb-4">
         <ul class="list-disc list-inside">
-          <li>Selamat datang di permainan tebak kata!</li>
-          <li>Masukkan kata dengan 5 huruf dan tekan ENTER.</li>
-          <li>🟩: huruf dan posisi benar, 🟨: huruf benar posisi salah, ⬜️: huruf dan posisi salah</li>
+          <li><small>Selamat datang di permainan tebak kata!</small></li>
+          <li><small>Masukkan kata dengan 5 huruf dan tekan ENTER.</small></li>
+          <li><small>🟩: huruf dan posisi benar, 🟨: huruf benar posisi salah, ⬜️: huruf dan posisi salah</small></li>
         </ul>
       </div>
 
@@ -103,6 +141,16 @@
     </p>
   </div>
 
+<!-- Stats Modal -->
+<StatsModal
+  :show="showStatsModal"
+  :stats="userStats"
+  :userId="userId"
+  :showResetButton="true"
+  @close="closeStats"
+  @reset-stats="handleResetStats"
+/>
+
 <!-- Modal Pop Up -->
 <div v-if="showModal" class="fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2">
   <div class="bg-white text-black rounded-lg shadow-lg p-6 max-w-xs w-full text-center relative">
@@ -114,7 +162,7 @@
     </h2>
     <p v-if="lastResult === 'win'">
       Kamu menang!<br>
-      <span class="text-sm text-zinc-500">Kata: <span class="font-mono font-bold">{{ targetWord.toUpperCase() }}</span></span>
+      <span class="text-sm text-gray-600">Kata: <span class="font-mono font-bold">{{ targetWord.toUpperCase() }}</span></span>
       <br>
       <a :href="`/kbbi/${targetWord}`" class="text-blue-500 hover:text-blue-400 transition duration-200">Cek artinya di KBBI</a>
     </p>
@@ -139,6 +187,8 @@
 <script setup>
   import { ref, onMounted, onUnmounted } from 'vue'
   import confetti from 'canvas-confetti'
+  import { getUserId, recordGameResult, addGameToHistory, getUserStats, resetAllStats } from '../utils/userStats'
+  import StatsModal from './StatsModal.vue'
 
   const targetWord = ref('')
   const validWords = ref([])
@@ -157,6 +207,9 @@
   const lastResult = ref('') // 'win' atau 'lose'
   const showShareMsg = ref(false)
   const toast = ref({ show: false, message: '', type: 'info' })
+  const showStatsModal = ref(false)
+  const userStats = ref(getUserStats())
+  const userId = ref(getUserId())
 
   function getShareEmoji(status) {
     if (status === 'correct') return '🟩'
@@ -271,6 +324,17 @@
       gameOver.value = true
       showModal.value = true
       lastResult.value = 'win'
+
+      // Record stats
+      recordGameResult(true, guesses.value.length)
+      addGameToHistory({
+        word: targetWord.value,
+        won: true,
+        guesses: guesses.value,
+        guessCount: guesses.value.length
+      })
+      userStats.value = getUserStats() // Update stats display
+
       successAudio.play()
       confetti({
         particleCount: 100,
@@ -289,6 +353,16 @@
       gameOver.value = true
       showModal.value = true
       lastResult.value = 'lose'
+
+      // Record stats
+      recordGameResult(false, guesses.value.length)
+      addGameToHistory({
+        word: targetWord.value,
+        won: false,
+        guesses: guesses.value,
+        guessCount: guesses.value.length
+      })
+      userStats.value = getUserStats() // Update stats display
     }
   }
 
@@ -413,6 +487,13 @@
   onMounted(() => {
     loadWords()
     window.addEventListener('keydown', handlePhysicalKeyboard)
+
+    // Initialize user tracking
+    const userId = getUserId()
+    const stats = getUserStats()
+    console.log('%cUser ID: ' + userId, 'color: blue; font-weight: bold;')
+    console.log('%cStats:', 'color: blue; font-weight: bold;', stats)
+
     // Peringatan untuk tidak mencari jawaban di console
     // Langsung tampilkan sekali
     console.warn('%cJangan curang!','color: red; font-size: 2em; font-weight: bold;')
@@ -439,6 +520,28 @@
     showShareMsg.value = false
     shakeRowIndex.value = null
     loadWords()
+  }
+
+  function openStats() {
+    userStats.value = getUserStats()
+    showStatsModal.value = true
+  }
+
+  function closeStats() {
+    showStatsModal.value = false
+  }
+
+  function handleResetStats() {
+    if (confirm('Yakin ingin reset semua statistik? Aksi ini tidak bisa dibatalkan!')) {
+      resetAllStats()
+      userStats.value = getUserStats()
+      showToast('Statistik berhasil direset!', 'info')
+    }
+  }
+
+  function getWinRateDisplay() {
+    if (userStats.value.totalGames === 0) return 0
+    return Math.round((userStats.value.wins / userStats.value.totalGames) * 100)
   }
 </script>
 
@@ -514,5 +617,20 @@
     filter: brightness(0.8);
     transform: scale(0.95);
     transition: filter 0.05s, transform 0.05s;
+  }
+
+  @keyframes pulse-subtle {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.95;
+      transform: scale(1.02);
+    }
+  }
+
+  .animate-pulse-subtle {
+    animation: pulse-subtle 2s ease-in-out infinite;
   }
 </style>
