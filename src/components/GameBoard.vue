@@ -115,6 +115,7 @@
     <p v-if="lastResult === 'win'">
       Kamu menang!<br>
       <span class="text-sm text-zinc-500">Kata: <span class="font-mono font-bold">{{ targetWord.toUpperCase() }}</span></span>
+      <br>
       <a :href="`/kbbi/${targetWord}`" class="text-blue-500 hover:text-blue-400 transition duration-200">Cek artinya di KBBI</a>
     </p>
     <p v-else>
