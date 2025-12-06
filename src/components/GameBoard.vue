@@ -1,6 +1,13 @@
 <template>
   <div class="min-h-screen max-w-screen w-full bg-zinc-900 text-white flex flex-col items-center p-2 sm:p-4">
     <header class="w-full max-w-2xl relative mb-2 sm:mb-4">
+      <button
+        @click="openInfo"
+        class="absolute left-0 top-1/2 -translate-y-1/2 px-3 py-2 bg-zinc-700 hover:bg-zinc-600 rounded text-sm transition"
+        aria-label="Info & Cara Main"
+      >
+        ℹ️
+      </button>
       <div class="text-2xl sm:text-3xl font-bold text-center text-white">
         <span class="text-red-500 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">K</span>
         <span class="text-red-500 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">A</span>
@@ -9,48 +16,37 @@
         <span class="text-green-500 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">L</span>
         <span class="text-green-500 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">A</span>
       </div>
-      <button
-        @click="openStats"
-        class="absolute right-0 top-1/2 -translate-y-1/2 px-3 py-2 bg-zinc-700 hover:bg-zinc-600 rounded text-sm transition"
-        aria-label="Lihat Statistik"
-      >
-        📊
-      </button>
+      <div class="absolute right-0 top-1/2 -translate-y-1/2 flex gap-2">
+        <button
+          @click="skipWord"
+          class="px-3 py-2 bg-zinc-700 hover:bg-zinc-600 rounded text-sm transition"
+          aria-label="Skip kata ini"
+        >
+          🔄
+        </button>
+        <button
+          @click="openStats"
+          class="px-3 py-2 bg-zinc-700 hover:bg-zinc-600 rounded text-sm transition"
+          aria-label="Lihat Statistik"
+        >
+          📊
+        </button>
+      </div>
     </header>
 
     <!-- Win Streak Display -->
     <div v-if="userStats.currentStreak > 1" class="mb-2 px-4 py-2 bg-gradient-to-r from-yellow-600 to-orange-600 rounded-lg shadow-lg animate-pulse-subtle">
       <div class="flex items-center justify-center gap-2 text-white">
         <span class="text-xl">🔥</span>
-        <span class="font-bold text-lg">{{ userStats.currentStreak }} Win Streak!</span>
+        <span class="font-bold">{{ userStats.currentStreak }} Win Streak!</span>
         <span class="text-xl">🔥</span>
-      </div>
-      <div v-if="userStats.currentStreak === userStats.maxStreak && userStats.maxStreak > 1" class="text-xs text-center text-yellow-200 mt-1">
-        🏆 Personal Best!
-      </div>
-    </div>
-
-    <!-- Quick Stats Bar -->
-    <div class="mb-3 flex gap-3 text-xs sm:text-sm text-zinc-400">
-      <div class="flex items-center gap-1">
-        <span class="text-zinc-500">🎮</span>
-        <span>{{ userStats.totalGames }} main</span>
-      </div>
-      <div class="flex items-center gap-1">
-        <span class="text-green-500">✓</span>
-        <span>{{ userStats.wins }} menang</span>
-      </div>
-      <div class="flex items-center gap-1">
-        <span class="text-zinc-500">%</span>
-        <span>{{ getWinRateDisplay() }}% win rate</span>
       </div>
     </div>
 
       <div class="text-sm sm:text-base text-zinc-400 mb-2 sm:mb-4">
         <ul class="list-disc list-inside">
-          <li><small>Selamat datang di permainan tebak kata!</small></li>
           <li><small>Masukkan kata dengan 5 huruf dan tekan ENTER.</small></li>
-          <li><small>🟩: huruf dan posisi benar, 🟨: huruf benar posisi salah, ⬜️: huruf dan posisi salah</small></li>
+          <li><small>🟩: huruf dan posisi benar, 🟨: huruf benar posisi salah, ⬜️: huruf dan posisi salah.</small></li>
         </ul>
       </div>
 
@@ -141,6 +137,12 @@
     </p>
   </div>
 
+<!-- Info Modal -->
+<InfoModal
+  :show="showInfoModal"
+  @close="closeInfo"
+/>
+
 <!-- Stats Modal -->
 <StatsModal
   :show="showStatsModal"
@@ -189,6 +191,7 @@
   import confetti from 'canvas-confetti'
   import { getUserId, recordGameResult, addGameToHistory, getUserStats, resetAllStats } from '../utils/userStats'
   import StatsModal from './StatsModal.vue'
+  import InfoModal from './InfoModal.vue'
 
   const targetWord = ref('')
   const validWords = ref([])
@@ -208,6 +211,7 @@
   const showShareMsg = ref(false)
   const toast = ref({ show: false, message: '', type: 'info' })
   const showStatsModal = ref(false)
+  const showInfoModal = ref(false)
   const userStats = ref(getUserStats())
   const userId = ref(getUserId())
 
@@ -542,6 +546,31 @@
   function getWinRateDisplay() {
     if (userStats.value.totalGames === 0) return 0
     return Math.round((userStats.value.wins / userStats.value.totalGames) * 100)
+  }
+
+  function openInfo() {
+    showInfoModal.value = true
+  }
+
+  function closeInfo() {
+    showInfoModal.value = false
+  }
+
+  function skipWord() {
+    if (confirm('Muat kata baru?')) {
+      // Reset game state tanpa record stats
+      guesses.value = []
+      currentGuess.value = ''
+      gameOver.value = false
+      toast.value = { show: false, message: '', type: 'info' }
+      usedKeys.value = {}
+      showModal.value = false
+      lastResult.value = ''
+      showShareMsg.value = false
+      shakeRowIndex.value = null
+      loadWords()
+      showToast('Kata baru dimuat! 🎯', 'info')
+    }
   }
 </script>
 
