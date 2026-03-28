@@ -5,7 +5,7 @@ const KbbiRedirect = {
   template: '<div>Mengalihkan ke KBBI...</div>',
   created() {
     const word = this.$route.params.word
-    window.location.href = `https://kbbi.kemdikbud.go.id/entri/${word}`
+    window.location.href = `https://kbbi.kemdikdasmen.go.id/entri/${word}`
   }
 }
 
