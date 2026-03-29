@@ -192,7 +192,7 @@
             v-if="rowIndex < guesses.length && currentLanguage === 'id'"
             :href="`https://kbbi.kemendikdasmen.go.id/entri/${guesses[rowIndex].join('')}`"
             target="_blank"
-            class="p-1.5 text-zinc-600 hover:text-blue-500 hover:bg-blue-500/10 rounded-lg transition-all opacity-0 group-hover/row:opacity-100 focus:opacity-100"
+            class="p-1.5 text-zinc-600 hover:text-blue-500 hover:bg-blue-500/10 rounded-lg transition-all opacity-100 sm:opacity-0 group-hover/row:opacity-100 focus:opacity-100"
             :title="`Lihat arti kata '${guesses[rowIndex].join('').toUpperCase()}' di KBBI`"
           >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
