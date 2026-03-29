@@ -45,7 +45,7 @@
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) v18 or later
+- [Node.js](https://nodejs.org/) v20.19 or later
 - [npm](https://www.npmjs.com/) v9 or later
 
 ### Installation
