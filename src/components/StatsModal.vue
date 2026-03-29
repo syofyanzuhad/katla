@@ -89,6 +89,36 @@
           </div>
         </Transition>
       </div>
+
+      <!-- Recent History -->
+      <div v-if="gameHistory.length > 0" class="mt-10 pt-10 border-t border-white/5">
+        <h3 class="text-sm font-black uppercase tracking-widest text-zinc-400 mb-6 px-1">Riwayat Terakhir</h3>
+        <div class="space-y-3 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
+          <div v-for="game in gameHistory" :key="game.id" 
+               class="flex items-center justify-between p-3 bg-zinc-800/30 rounded-xl border border-white/5 group/history">
+            <div class="flex flex-col">
+              <span class="text-sm font-black uppercase tracking-widest" :class="game.won ? 'text-green-500' : 'text-zinc-400'">
+                {{ game.word }}
+              </span>
+              <span class="text-[9px] text-zinc-600 font-bold uppercase tracking-tighter">
+                {{ new Date(game.timestamp).toLocaleDateString() }} • {{ game.guessCount || 'X' }} Tebakan
+              </span>
+            </div>
+            
+            <div class="flex items-center gap-2">
+              <a :href="`https://kbbi.kemendikdasmen.go.id/entri/${game.word}`" target="_blank" 
+                 class="p-2 text-zinc-600 hover:text-blue-400 hover:bg-blue-500/10 rounded-lg transition-all"
+                 title="Lihat KBBI">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.967 0 016 18c1.097 0 2.16.22 3.136.617a5.995 5.995 0 016.728 0 12.17 12.17 0 013.136-.617c1.052 0 2.062.18 3 .512V4.262a8.967 8.967 0 00-3-.512 8.967 8.967 0 00-6 2.292m0-2.292a12.17 12.17 0 013.136-.617c1.052 0 2.062.18 3 .512v14.25A8.987 8.967 0 0118 18a12.17 12.17 0 01-3.136.617m-6.864-14.713a12.115 12.115 0 016.864 0M9 17.01V4.5m1.875 13.5a11.992 11.992 0 003.75 0" />
+                </svg>
+              </a>
+              <div v-if="game.won" class="w-2 h-2 bg-green-500 rounded-full shadow-lg shadow-green-900/20"></div>
+              <div v-else class="w-2 h-2 bg-red-500 rounded-full shadow-lg shadow-red-900/20"></div>
+            </div>
+          </div>
+        </div>
+      </div>
       
       <div class="text-[9px] text-zinc-600 text-center mt-6 uppercase tracking-[0.2em] font-bold opacity-50">
         ID: {{ userId.substring(0, 12) }}
@@ -98,9 +128,10 @@
 </template>
 
 <script setup>
-import { computed, ref, toRef } from 'vue'
+import { computed, ref, toRef, onMounted } from 'vue'
 import { useFocusTrap } from '../composables/useFocusTrap'
 import { useShare } from '../composables/useShare'
+import { getGameHistory } from '../utils/userStats'
 
 const props = defineProps({
   show: {
@@ -124,6 +155,11 @@ const props = defineProps({
 defineEmits(['close', 'reset-stats'])
 
 const { showShareMsg, shareStats, openStatsShare } = useShare()
+const gameHistory = ref([])
+
+onMounted(() => {
+  gameHistory.value = getGameHistory()
+})
 
 const modalRef = ref(null)
 useFocusTrap(modalRef, toRef(props, 'show'))
@@ -160,5 +196,19 @@ function handleOpenStatsShare(app) {
 }
 .scale-in {
   animation: scale-in 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #3f3f46;
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #52525b;
 }
 </style>

@@ -666,6 +666,15 @@
       : 'New word loaded! 🎯'
 
     if (confirm(confirmMsg)) {
+      // Record as loss if they already made guesses
+      if (guesses.value.length > 0) {
+        addGameToHistory({
+          word: targetWord.value,
+          won: false,
+          guesses: guesses.value,
+          guessCount: guesses.value.length
+        })
+      }
       resetGame('random')
       showToast(toastMsg, 'info')
     }
