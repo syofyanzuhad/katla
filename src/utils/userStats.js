@@ -5,6 +5,9 @@
 
 // Generate UUID v4
 function generateUUID() {
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return crypto.randomUUID()
+  }
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
     const r = Math.random() * 16 | 0
     const v = c === 'x' ? r : (r & 0x3 | 0x8)
@@ -25,25 +28,31 @@ export function getUserId() {
 // Get user stats
 export function getUserStats() {
   const statsJson = localStorage.getItem('katla_user_stats')
-  if (!statsJson) {
-    return {
-      totalGames: 0,
-      wins: 0,
-      losses: 0,
-      currentStreak: 0,
-      maxStreak: 0,
-      guessDistribution: {
-        1: 0,
-        2: 0,
-        3: 0,
-        4: 0,
-        5: 0,
-        6: 0
-      },
-      lastPlayed: null
-    }
+  const defaultStats = {
+    totalGames: 0,
+    wins: 0,
+    losses: 0,
+    currentStreak: 0,
+    maxStreak: 0,
+    guessDistribution: {
+      1: 0,
+      2: 0,
+      3: 0,
+      4: 0,
+      5: 0,
+      6: 0
+    },
+    lastPlayed: null
   }
-  return JSON.parse(statsJson)
+
+  if (!statsJson) return defaultStats
+
+  try {
+    return { ...defaultStats, ...JSON.parse(statsJson) }
+  } catch (error) {
+    console.error('Error parsing user stats:', error)
+    return defaultStats
+  }
 }
 
 // Save user stats
@@ -80,7 +89,12 @@ export function recordGameResult(won, guessCount) {
 export function getGameHistory() {
   const historyJson = localStorage.getItem('katla_game_history')
   if (!historyJson) return []
-  return JSON.parse(historyJson)
+  try {
+    return JSON.parse(historyJson)
+  } catch (error) {
+    console.error('Error parsing game history:', error)
+    return []
+  }
 }
 
 // Add game to history

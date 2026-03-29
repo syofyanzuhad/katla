@@ -45,15 +45,23 @@
 
       <div class="text-sm sm:text-base text-zinc-400 mb-2 sm:mb-4">
         <ul class="list-disc list-inside">
-          <li><small>Masukkan kata dengan 5 huruf dan tekan ENTER.</small></li>
+          <li><small>Masukkan kata dengan {{ WORD_LENGTH }} huruf dan tekan ENTER.</small></li>
           <li><small>🟩: huruf dan posisi benar, 🟨: huruf benar posisi salah, ⬜️: huruf dan posisi salah.</small></li>
         </ul>
       </div>
 
-    <div class="grid grid-rows-6 gap-1 sm:gap-2 min-h-[50vh] lg:min-h-[60vh]">
-      <div v-for="(guessRow, rowIndex) in 6" :key="rowIndex" class="grid grid-cols-5 gap-1 sm:gap-2">
+    <div
+      class="grid gap-1 sm:gap-2 min-h-[50vh] lg:min-h-[60vh]"
+      :style="{ gridTemplateRows: `repeat(${MAX_ATTEMPTS}, minmax(0, 1fr))` }"
+    >
+      <div
+        v-for="(guessRow, rowIndex) in MAX_ATTEMPTS"
+        :key="rowIndex"
+        class="grid gap-1 sm:gap-2"
+        :style="{ gridTemplateColumns: `repeat(${WORD_LENGTH}, minmax(0, 1fr))` }"
+      >
         <div
-          v-for="colIndex in 5"
+          v-for="colIndex in WORD_LENGTH"
           :key="colIndex"
           class="w-15 h-15 sm:w-14 sm:h-14 lg:w-25 lg:h-25 border-2 text-xl sm:text-2xl flex items-center justify-center font-bold uppercase transition-all duration-500 ease-in-out transform"
           :class="[
@@ -192,90 +200,64 @@
   import { getUserId, recordGameResult, addGameToHistory, getUserStats, resetAllStats } from '../utils/userStats'
   import StatsModal from './StatsModal.vue'
   import InfoModal from './InfoModal.vue'
+  import { useGameLogic } from '../composables/useGameLogic'
+  import { useAudio } from '../composables/useAudio'
+  import { useShare } from '../composables/useShare'
+  import { WORD_LENGTH, MAX_ATTEMPTS } from '../constants'
 
-  const targetWord = ref('')
-  const validWords = ref([])
-  const guesses = ref([])
-  const currentGuess = ref('')
-  const maxAttempts = 6
-  const gameOver = ref(false)
-  const message = ref('')
-  const audio = new Audio('/button-16a.mp3')
-  const successAudio = new Audio('/goodresult-82807.mp3')
-  const errorAudio = new Audio('/error-10-206498.mp3')
-  const flipAudio = new Audio('/pageturn-102978.mp3')
+  const {
+    targetWord,
+    guesses,
+    currentGuess,
+    gameOver,
+    usedKeys,
+    lastResult,
+    loadWords,
+    submitGuess: submitGuessLogic,
+    getLetterStatuses,
+    resetGame: resetGameLogic
+  } = useGameLogic()
+
+  const {
+    playKeySound,
+    playSuccessSound,
+    playErrorSound,
+    playFlipSound
+  } = useAudio()
+
+  const {
+    showShareMsg,
+    shareResult: shareResultLogic,
+    openShare: openShareLogic
+  } = useShare()
+
   const shakeRowIndex = ref(null)
-
   const showModal = ref(false)
-  const lastResult = ref('') // 'win' atau 'lose'
-  const showShareMsg = ref(false)
   const toast = ref({ show: false, message: '', type: 'info' })
   const showStatsModal = ref(false)
   const showInfoModal = ref(false)
   const userStats = ref(getUserStats())
   const userId = ref(getUserId())
-
-  function getShareEmoji(status) {
-    if (status === 'correct') return '🟩'
-    if (status === 'present') return '🟨'
-    return '⬜️'
-  }
-
-  function generateShareText() {
-    let text = `Katla ${lastResult.value === 'win' ? guesses.value.length : 'X'}/${maxAttempts}\n\n`
-    for (let i = 0; i < guesses.value.length; i++) {
-      const guess = guesses.value[i]
-      const statuses = getLetterStatuses(guess, targetWord.value.split(''))
-      text += statuses.map(getShareEmoji).join('') + '\n'
-    }
-    if (lastResult.value === 'win') {
-      text += '\n🎉 Selamat!'
-    } else {
-      text += `\nKata: ${targetWord.value.toUpperCase()}`
-    }
-    text += `\n${window.location.href}`
-    return text
-  }
+  const pressedKey = ref('')
 
   async function shareResult() {
-    const text = generateShareText()
-    try {
-      await navigator.clipboard.writeText(text)
-      showShareMsg.value = true
-      setTimeout(() => showShareMsg.value = false, 2000)
-    } catch (e) {
-      alert('Gagal menyalin hasil ke clipboard')
-    }
+    await shareResultLogic({
+      lastResult: lastResult.value,
+      guesses: guesses.value,
+      maxAttempts: MAX_ATTEMPTS,
+      targetWord: targetWord.value,
+      getLetterStatuses
+    })
   }
 
   function openShare(app) {
-    const text = encodeURIComponent(generateShareText())
-    let url = ''
-    if (app === 'whatsapp') {
-      url = `https://wa.me/?text=${text}`
-    } else if (app === 'twitter') {
-      url = `https://twitter.com/intent/tweet?text=${text}`
-    } else if (app === 'telegram') {
-      url = `https://t.me/share/url?text=${text}`
-    }
-    window.open(url, '_blank')
-  }
-
-  const usedKeys = ref({})
-  const pressedKey = ref('')
-
-  async function loadWords() {
-    try {
-      const response = await fetch('/words.json')
-      const data = await response.json()
-      validWords.value = data.words
-      // Select a random word as target
-      targetWord.value = validWords.value[Math.floor(Math.random() * validWords.value.length)]
-      // console.log('%csrc/components/GameBoard.vue:164 targetWord.value', 'color: #007acc;', targetWord.value);
-    } catch (error) {
-      console.error('Error loading words:', error)
-      message.value = 'Error loading words. Please refresh the page.'
-    }
+    openShareLogic(app, {
+      lastResult: lastResult.value,
+      guesses: guesses.value,
+      maxAttempts: MAX_ATTEMPTS,
+      targetWord: targetWord.value,
+      getLetterStatuses
+    })
   }
 
   function showToast(message, type = 'info', duration = 3000) {
@@ -286,95 +268,54 @@
   }
 
   function submitGuess() {
-    if (currentGuess.value.length !== 5) {
-      showToast('Kata harus 5 huruf.', 'error')
-      shakeRowIndex.value = guesses.value.length
-      resetShake()
-      errorAudio.currentTime = 0
-      errorAudio.play()
-      if (navigator.vibrate) navigator.vibrate(150)
-      return
-    }
-
-    const guess = currentGuess.value.toLowerCase()
-    if (!validWords.value.includes(guess)) {
-      showToast('Kata tidak ada dalam kamus.', 'error')
-      shakeRowIndex.value = guesses.value.length
-      resetShake()
-      errorAudio.currentTime = 0
-      errorAudio.play()
-      if (navigator.vibrate) navigator.vibrate(150)
-      return
-    }
-
-    const guessArray = guess.split('')
-    const statuses = getLetterStatuses(guessArray, targetWord.value.split(''))
-    guesses.value.push(guessArray)
-
-    guessArray.forEach((letter, i) => {
-      if (statuses[i] === 'correct') {
-        usedKeys.value[letter] = 'correct'
-      } else if (statuses[i] === 'present' && usedKeys.value[letter] !== 'correct') {
-        usedKeys.value[letter] = 'present'
-      } else if (!usedKeys.value[letter]) {
-        usedKeys.value[letter] = 'absent'
+    submitGuessLogic({
+      onInvalid: (msg, type) => {
+        showToast(msg, 'error')
+        shakeRowIndex.value = guesses.value.length
+        resetShake()
+        playErrorSound()
+        if (navigator.vibrate) navigator.vibrate(150)
+      },
+      onWin: () => {
+        showToast(`🎉 Selamat! Kamu menang! Cek artinya di <a href="/kbbi/${targetWord.value}" class="text-blue-400 hover:text-blue-300 transition duration-200">KBBI</a>`, 'success')
+        showModal.value = true
+        recordGameResult(true, guesses.value.length)
+        addGameToHistory({
+          word: targetWord.value,
+          won: true,
+          guesses: guesses.value,
+          guessCount: guesses.value.length
+        })
+        userStats.value = getUserStats()
+        playSuccessSound()
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 }
+        })
+      },
+      onLoss: () => {
+        showToast(`😢 Kamu kalah. Kata: ${targetWord.value.toUpperCase()} - <a href="/kbbi/${targetWord.value}" class="text-blue-400 hover:text-blue-300 transition duration-200">Lihat di KBBI</a>`, 'error')
+        showModal.value = true
+        recordGameResult(false, guesses.value.length)
+        addGameToHistory({
+          word: targetWord.value,
+          won: false,
+          guesses: guesses.value,
+          guessCount: guesses.value.length
+        })
+        userStats.value = getUserStats()
+      },
+      onFlip: () => {
+        playFlipSound()
       }
     })
-
-    currentGuess.value = ''
-
-    if (guess === targetWord.value) {
-      showToast(`🎉 Selamat! Kamu menang! Cek artinya di <a href="/kbbi/${targetWord.value}" class="text-blue-400 hover:text-blue-300 transition duration-200">KBBI</a>`, 'success')
-      gameOver.value = true
-      showModal.value = true
-      lastResult.value = 'win'
-
-      // Record stats
-      recordGameResult(true, guesses.value.length)
-      addGameToHistory({
-        word: targetWord.value,
-        won: true,
-        guesses: guesses.value,
-        guessCount: guesses.value.length
-      })
-      userStats.value = getUserStats() // Update stats display
-
-      successAudio.play()
-      confetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.6 }
-      })
-      return
-    } else {
-      // console.log('flip')
-      flipAudio.currentTime = 0
-      flipAudio.play()
-    }
-
-    if (guesses.value.length >= maxAttempts) {
-      showToast(`😢 Kamu kalah. Kata: ${targetWord.value.toUpperCase()} - <a href="/kbbi/${targetWord.value}" class="text-blue-400 hover:text-blue-300 transition duration-200">Lihat di KBBI</a>`, 'error')
-      gameOver.value = true
-      showModal.value = true
-      lastResult.value = 'lose'
-
-      // Record stats
-      recordGameResult(false, guesses.value.length)
-      addGameToHistory({
-        word: targetWord.value,
-        won: false,
-        guesses: guesses.value,
-        guessCount: guesses.value.length
-      })
-      userStats.value = getUserStats() // Update stats display
-    }
   }
 
   function pressKey(key) {
-    if (gameOver.value || currentGuess.value.length >= 5 || guesses.value.length >= maxAttempts) return
+    if (gameOver.value || currentGuess.value.length >= WORD_LENGTH || guesses.value.length >= MAX_ATTEMPTS) return
     currentGuess.value += key.toLowerCase()
-    audio.currentTime = 0
-    audio.play()
+    playKeySound()
     pressedKey.value = key.toLowerCase()
     setTimeout(() => { pressedKey.value = '' }, 120)
     if (navigator.vibrate) navigator.vibrate(30)
@@ -384,8 +325,7 @@
     if (currentGuess.value.length > 0 && !gameOver.value) {
       currentGuess.value = currentGuess.value.slice(0, -1)
     }
-    audio.currentTime = 0
-    audio.play()
+    playKeySound()
     pressedKey.value = 'backspace'
     setTimeout(() => { pressedKey.value = '' }, 120)
     if (navigator.vibrate) navigator.vibrate(30)
@@ -393,50 +333,23 @@
 
   function pressEnter() {
     if (!gameOver.value) submitGuess()
-    audio.currentTime = 0
+    playKeySound()
     pressedKey.value = 'enter'
     setTimeout(() => { pressedKey.value = '' }, 120)
     if (navigator.vibrate) navigator.vibrate(30)
   }
 
   function resetShake() {
-  setTimeout(() => {
-    shakeRowIndex.value = null
-  }, 500)
-}
+    setTimeout(() => {
+      shakeRowIndex.value = null
+    }, 500)
+  }
 
   function getLetterDisplay(row, col) {
     if (row === guesses.value.length) {
       return currentGuess.value[col]?.toUpperCase() || ''
     }
     return guesses.value[row]?.[col]?.toUpperCase() || ''
-  }
-
-  function getLetterStatuses(guess, target) {
-    const statuses = Array(5).fill('absent')
-    const targetUsed = Array(5).fill(false)
-
-    // First pass: correct letters
-    for (let i = 0; i < 5; i++) {
-      if (guess[i] === target[i]) {
-        statuses[i] = 'correct'
-        targetUsed[i] = true
-      }
-    }
-
-    // Second pass: present letters
-    for (let i = 0; i < 5; i++) {
-      if (statuses[i] === 'correct') continue
-      for (let j = 0; j < 5; j++) {
-        if (!targetUsed[j] && guess[i] === target[j]) {
-          statuses[i] = 'present'
-          targetUsed[j] = true
-          break
-        }
-      }
-    }
-
-    return statuses
   }
 
   function getBoxClass(row, col) {
@@ -476,54 +389,30 @@
 
     if (key === 'enter') {
       pressEnter()
-      pressedKey.value = 'enter'
-      setTimeout(() => { pressedKey.value = '' }, 120)
     } else if (key === 'backspace') {
       pressBackspace()
-      pressedKey.value = 'backspace'
-      setTimeout(() => { pressedKey.value = '' }, 120)
     } else if (/^[a-z]$/.test(key)) {
       pressKey(key)
     }
   }
 
-  // let warnInterval = null
   onMounted(() => {
     loadWords()
     window.addEventListener('keydown', handlePhysicalKeyboard)
 
-    // Initialize user tracking
-    const userId = getUserId()
-    const stats = getUserStats()
-    console.log('%cUser ID: ' + userId, 'color: blue; font-weight: bold;')
-    console.log('%cStats:', 'color: blue; font-weight: bold;', stats)
-
-    // Peringatan untuk tidak mencari jawaban di console
-    // Langsung tampilkan sekali
+    console.log('%cUser ID: ' + userId.value, 'color: blue; font-weight: bold;')
     console.warn('%cJangan curang!','color: red; font-size: 2em; font-weight: bold;')
-    console.warn('%cMencontek jawaban di console mengurangi keseruan bermain Katla. Cobalah tebak sendiri dulu!','color: orange; font-size: 1.2em;')
-    // warnInterval = setInterval(() => {
-    //   console.warn('%cJangan curang!','color: red; font-size: 2em; font-weight: bold;')
-    //   console.warn('%cMencontek jawaban di console mengurangi keseruan bermain Katla. Cobalah tebak sendiri dulu!','color: orange; font-size: 1.2em;')
-    // }, 1000)
   })
 
   onUnmounted(() => {
     window.removeEventListener('keydown', handlePhysicalKeyboard)
-    if (warnInterval) clearInterval(warnInterval)
   })
 
   function resetGame() {
-    guesses.value = []
-    currentGuess.value = ''
-    gameOver.value = false
+    resetGameLogic()
     toast.value = { show: false, message: '', type: 'info' }
-    usedKeys.value = {}
     showModal.value = false
-    lastResult.value = ''
-    showShareMsg.value = false
     shakeRowIndex.value = null
-    loadWords()
   }
 
   function openStats() {
@@ -543,11 +432,6 @@
     }
   }
 
-  function getWinRateDisplay() {
-    if (userStats.value.totalGames === 0) return 0
-    return Math.round((userStats.value.wins / userStats.value.totalGames) * 100)
-  }
-
   function openInfo() {
     showInfoModal.value = true
   }
@@ -558,17 +442,7 @@
 
   function skipWord() {
     if (confirm('Muat kata baru?')) {
-      // Reset game state tanpa record stats
-      guesses.value = []
-      currentGuess.value = ''
-      gameOver.value = false
-      toast.value = { show: false, message: '', type: 'info' }
-      usedKeys.value = {}
-      showModal.value = false
-      lastResult.value = ''
-      showShareMsg.value = false
-      shakeRowIndex.value = null
-      loadWords()
+      resetGame()
       showToast('Kata baru dimuat! 🎯', 'info')
     }
   }
