@@ -242,7 +242,7 @@
 <!-- Result Modal Pop Up -->
 <Transition name="scale">
 <div v-if="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-  <div class="bg-zinc-900 text-white rounded-3xl shadow-2xl p-8 max-w-sm w-full text-center relative border border-zinc-800 scale-in transition-all duration-500">
+  <div class="bg-zinc-900 text-white rounded-3xl shadow-2xl p-8 max-w-sm w-full text-center relative border border-zinc-800 scale-in transition-all duration-500 max-h-[90vh] overflow-y-auto">
     <button @click="showModal = false" aria-label="Tutup" class="absolute top-4 right-4 p-2 text-zinc-500 hover:text-white hover:bg-white/10 transition-all rounded-xl focus:outline-none">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />

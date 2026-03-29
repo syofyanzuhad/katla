@@ -1,6 +1,6 @@
 <template>
   <div v-if="show" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" role="dialog" aria-modal="true" aria-labelledby="stats-title">
-    <div ref="modalRef" class="bg-zinc-900 text-white rounded-3xl shadow-2xl max-w-md w-full p-8 relative border border-zinc-800 transition-all duration-500 scale-in">
+    <div ref="modalRef" class="bg-zinc-900 text-white rounded-3xl shadow-2xl max-w-md w-full p-8 relative border border-zinc-800 transition-all duration-500 scale-in max-h-[90vh] overflow-y-auto">
       <button
         @click="$emit('close')"
         aria-label="Tutup"
