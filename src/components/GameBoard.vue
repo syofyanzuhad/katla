@@ -152,7 +152,7 @@
 
     <!-- Main Game Grid -->
     <div
-      class="grid gap-2 mb-8"
+      class="grid gap-2 mb-8 relative"
       :style="{ gridTemplateRows: `repeat(${MAX_ATTEMPTS}, minmax(0, 1fr))` }"
       role="grid"
       aria-label="Game board"
@@ -160,26 +160,45 @@
       <div
         v-for="(guessRow, rowIndex) in MAX_ATTEMPTS"
         :key="rowIndex"
-        class="grid gap-2"
-        :style="{ gridTemplateColumns: `repeat(${WORD_LENGTH}, minmax(0, 1fr))` }"
-        role="row"
-        :aria-label="`Baris ${rowIndex + 1}`"
+        class="flex items-center gap-3 group/row"
       >
         <div
-          v-for="colIndex in WORD_LENGTH"
-          :key="colIndex"
-          class="w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20 border-2 rounded-lg text-2xl sm:text-3xl flex items-center justify-center font-black uppercase transition-all duration-300 select-none"
-          :class="[
-            getBoxClass(rowIndex, colIndex - 1),
-            getFlipClass(rowIndex, colIndex - 1),
-            { 'animate-shake': shakeRowIndex === rowIndex },
-            { 'animate-pop': rowIndex === guesses.length && currentGuess.length === colIndex }
-          ]"
-          role="gridcell"
-          :aria-label="getAriaLabel(rowIndex, colIndex - 1)"
-          :aria-live="rowIndex === guesses.length ? 'polite' : 'off'"
+          class="grid gap-2"
+          :style="{ gridTemplateColumns: `repeat(${WORD_LENGTH}, minmax(0, 1fr))` }"
+          role="row"
+          :aria-label="`Baris ${rowIndex + 1}`"
         >
-          {{ getLetterDisplay(rowIndex, colIndex - 1) }}
+          <div
+            v-for="colIndex in WORD_LENGTH"
+            :key="colIndex"
+            class="w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20 border-2 rounded-lg text-2xl sm:text-3xl flex items-center justify-center font-black uppercase transition-all duration-300 select-none"
+            :class="[
+              getBoxClass(rowIndex, colIndex - 1),
+              getFlipClass(rowIndex, colIndex - 1),
+              { 'animate-shake': shakeRowIndex === rowIndex },
+              { 'animate-pop': rowIndex === guesses.length && currentGuess.length === colIndex }
+            ]"
+            role="gridcell"
+            :aria-label="getAriaLabel(rowIndex, colIndex - 1)"
+            :aria-live="rowIndex === guesses.length ? 'polite' : 'off'"
+          >
+            {{ getLetterDisplay(rowIndex, colIndex - 1) }}
+          </div>
+        </div>
+
+        <!-- KBBI Lookup Link for guessed rows -->
+        <div class="w-8 flex justify-center">
+          <a
+            v-if="rowIndex < guesses.length && currentLanguage === 'id'"
+            :href="`https://kbbi.kemendikdasmen.go.id/entri/${guesses[rowIndex].join('')}`"
+            target="_blank"
+            class="p-1.5 text-zinc-600 hover:text-blue-500 hover:bg-blue-500/10 rounded-lg transition-all opacity-0 group-hover/row:opacity-100 focus:opacity-100"
+            :title="`Lihat arti kata '${guesses[rowIndex].join('').toUpperCase()}' di KBBI`"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.967 0 016 18c1.097 0 2.16.22 3.136.617a5.995 5.995 0 016.728 0 12.17 12.17 0 013.136-.617c1.052 0 2.062.18 3 .512V4.262a8.967 8.967 0 00-3-.512 8.967 8.967 0 00-6 2.292m0-2.292a12.17 12.17 0 013.136-.617c1.052 0 2.062.18 3 .512v14.25A8.987 8.967 0 0118 18a12.17 12.17 0 01-3.136.617m-6.864-14.713a12.115 12.115 0 016.864 0M9 17.01V4.5m1.875 13.5a11.992 11.992 0 003.75 0" />
+            </svg>
+          </a>
         </div>
       </div>
     </div>
