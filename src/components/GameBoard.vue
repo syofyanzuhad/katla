@@ -173,7 +173,7 @@
       <a :href="`/kbbi/${targetWord}`" class="text-blue-500 hover:text-blue-400 transition duration-200">Lihat di KBBI</a>
     </p>
     <button @click="shareResult" class="mt-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition cursor-pointer">Salin Hasil</button>
-    <button @click="resetGame" class="ml-1 mt-4 px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 transition cursor-pointer">Reset</button>
+    <button @click="resetGame" class="ml-1 mt-4 px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 transition cursor-pointer">Lanjut</button>
     <div v-if="showShareMsg" class="mt-2 text-green-700 text-sm">Hasil disalin ke clipboard!</div>
     <p class="text-sm mt-4">Bagikan ke:</p>
     <div class="flex justify-center gap-2 mt-4">
