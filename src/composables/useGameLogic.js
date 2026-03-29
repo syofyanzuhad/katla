@@ -10,7 +10,7 @@ export function useGameLogic() {
   const gameOver = ref(false)
   const usedKeys = ref({})
   const lastResult = ref('') // 'win' or 'lose'
-  const gameMode = ref('daily') // 'daily' or 'random'
+  const gameMode = ref(localStorage.getItem('katla-mode') || 'daily') // 'daily' or 'random'
   const currentLanguage = ref(localStorage.getItem('katla-lang') || 'id')
 
   let cachedWords = { id: null, en: null }
@@ -21,14 +21,17 @@ export function useGameLogic() {
     return x - Math.floor(x)
   }
 
-  async function loadWords(mode = 'daily', lang = null) {
+  async function loadWords(mode = null, lang = null) {
     if (lang) {
       currentLanguage.value = lang
     } else if (!localStorage.getItem('katla-lang')) {
       currentLanguage.value = 'id'
     }
     
-    gameMode.value = mode
+    if (mode) {
+      gameMode.value = mode
+      localStorage.setItem('katla-mode', mode)
+    }
     
     if (cachedWords[currentLanguage.value]) {
       validWords.value = cachedWords[currentLanguage.value]
@@ -160,6 +163,7 @@ export function useGameLogic() {
 
   function resetGame(mode = 'random') {
     gameMode.value = mode
+    localStorage.setItem('katla-mode', mode)
     guesses.value = []
     currentGuess.value = ''
     gameOver.value = false
