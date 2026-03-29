@@ -315,7 +315,15 @@
 <script setup>
   import { ref, onMounted, onUnmounted } from 'vue'
   import confetti from 'canvas-confetti'
-  import { getUserId, recordGameResult, addGameToHistory, getUserStats, resetAllStats } from '../utils/userStats'
+  import { 
+    getUserId, 
+    recordGameResult, 
+    addGameToHistory, 
+    getUserStats, 
+    resetAllStats,
+    getDailyState,
+    saveDailyState
+  } from '../utils/userStats'
   import StatsModal from './StatsModal.vue'
   import InfoModal from './InfoModal.vue'
   import { useGameLogic } from '../composables/useGameLogic'
@@ -340,7 +348,8 @@
     submitGuess: submitGuessLogic,
     getLetterStatuses,
     resetGame: resetGameLogic,
-    toggleLanguage
+    toggleLanguage,
+    loadDailyState
   } = useGameLogic()
 
   const {
@@ -406,6 +415,15 @@
         showToast(`🎉 Selamat! Kamu menang! Cek artinya di <a href="/kbbi/${targetWord.value}" class="text-blue-400 hover:text-blue-300 transition duration-200">KBBI</a>`, 'success')
         showModal.value = true
         recordGameResult(true, guesses.value.length, gameMode.value, getTodaySeed())
+        
+        if (gameMode.value === 'daily') {
+          saveDailyState(getTodaySeed(), {
+            guesses: guesses.value,
+            gameOver: true,
+            lastResult: 'win'
+          })
+        }
+
         addGameToHistory({
           word: targetWord.value,
           won: true,
@@ -424,6 +442,15 @@
         showToast(`😢 Kamu kalah. Kata: ${targetWord.value.toUpperCase()} - <a href="/kbbi/${targetWord.value}" class="text-blue-400 hover:text-blue-300 transition duration-200">Lihat di KBBI</a>`, 'error')
         showModal.value = true
         recordGameResult(false, guesses.value.length, gameMode.value, getTodaySeed())
+        
+        if (gameMode.value === 'daily') {
+          saveDailyState(getTodaySeed(), {
+            guesses: guesses.value,
+            gameOver: true,
+            lastResult: 'lose'
+          })
+        }
+
         addGameToHistory({
           word: targetWord.value,
           won: false,
@@ -539,8 +566,22 @@
     }
   }
 
-  onMounted(() => {
-    loadWords()
+  onMounted(async () => {
+    await loadWords()
+
+    // Check for existing daily state
+    if (gameMode.value === 'daily') {
+      const savedState = getDailyState(getTodaySeed())
+      if (savedState) {
+        loadDailyState(savedState)
+        if (savedState.gameOver) {
+          setTimeout(() => {
+            showModal.value = true
+          }, 1000)
+        }
+      }
+    }
+
     window.addEventListener('keydown', handlePhysicalKeyboard)
 
     // Show quick tip on first visit

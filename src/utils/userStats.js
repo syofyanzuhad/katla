@@ -132,6 +132,33 @@ export function addGameToHistory(gameData) {
   return newGame
 }
 
+// Save today's daily state
+export function saveDailyState(seed, state) {
+  const dailyStates = getDailyStates()
+  dailyStates[seed] = {
+    ...state,
+    timestamp: new Date().toISOString()
+  }
+  localStorage.setItem('katla_daily_states', JSON.stringify(dailyStates))
+}
+
+// Get daily states
+function getDailyStates() {
+  const statesJson = localStorage.getItem('katla_daily_states')
+  if (!statesJson) return {}
+  try {
+    return JSON.parse(statesJson)
+  } catch (e) {
+    return {}
+  }
+}
+
+// Get today's state
+export function getDailyState(seed) {
+  const states = getDailyStates()
+  return states[seed] || null
+}
+
 // Calculate win rate
 export function getWinRate() {
   const stats = getUserStats()

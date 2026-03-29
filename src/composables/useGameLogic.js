@@ -64,6 +64,28 @@ export function useGameLogic() {
     }
   }
 
+  function loadDailyState(state) {
+    if (!state) return
+    guesses.value = state.guesses || []
+    gameOver.value = state.gameOver || false
+    lastResult.value = state.lastResult || ''
+    
+    // Reconstruct used keys
+    usedKeys.value = {}
+    guesses.value.forEach(guess => {
+      const statuses = getLetterStatuses(guess, targetWord.value.split(''))
+      guess.forEach((letter, i) => {
+        if (statuses[i] === 'correct') {
+          usedKeys.value[letter] = 'correct'
+        } else if (statuses[i] === 'present' && usedKeys.value[letter] !== 'correct') {
+          usedKeys.value[letter] = 'present'
+        } else if (!usedKeys.value[letter]) {
+          usedKeys.value[letter] = 'absent'
+        }
+      })
+    })
+  }
+
 
   function getLetterStatuses(guess, target) {
     const statuses = Array(WORD_LENGTH).fill('absent')
@@ -159,6 +181,7 @@ export function useGameLogic() {
     submitGuess,
     getLetterStatuses,
     resetGame,
-    toggleLanguage
+    toggleLanguage,
+    loadDailyState
   }
 }
