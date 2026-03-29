@@ -53,6 +53,15 @@
 
     <!-- Toolbar / Control Bar -->
     <div class="w-full max-w-md flex items-center justify-center gap-2 mb-8 px-2 sm:gap-3">
+      <!-- Offline Indicator -->
+      <div v-if="!isOnline" class="flex items-center gap-1.5 px-3 py-2 bg-amber-500/10 border border-amber-500/20 rounded-xl text-[10px] font-black uppercase tracking-widest text-amber-500 animate-pulse shrink-0">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15a4.5 4.5 0 004.5 4.5H18a3.75 3.75 0 001.332-7.257 3 3 0 00-3.758-3.848 5.25 5.25 0 00-10.233 2.33A4.502 4.502 0 002.25 15z" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M1 1l22 22" />
+        </svg>
+        <span class="hidden xs:inline">Offline</span>
+      </div>
+
       <!-- Mode Toggle (Pill) -->
       <div class="flex p-1 bg-zinc-500/10 rounded-xl border border-zinc-500/20 backdrop-blur-sm shrink-0">
         <button 
@@ -408,6 +417,7 @@
   const showStatsModal = ref(false)
   const showInfoModal = ref(false)
   const showQuickTip = ref(false)
+  const isOnline = ref(navigator.onLine)
   const userStats = ref(getUserStats())
   const userId = ref(getUserId())
   const pressedKey = ref('')
@@ -603,11 +613,16 @@
     }
   }
 
+  const handleOffline = () => { isOnline.value = false }
+  const handleOnline = () => { isOnline.value = true }
+
   onMounted(async () => {
     await loadWords()
     checkDailyState()
 
     window.addEventListener('keydown', handlePhysicalKeyboard)
+    window.addEventListener('offline', handleOffline)
+    window.addEventListener('online', handleOnline)
 
     // Show quick tip on first visit
     const visited = localStorage.getItem('katla_visited')
@@ -622,6 +637,8 @@
 
   onUnmounted(() => {
     window.removeEventListener('keydown', handlePhysicalKeyboard)
+    window.removeEventListener('offline', handleOffline)
+    window.removeEventListener('online', handleOnline)
   })
 
   function dismissQuickTip() {
