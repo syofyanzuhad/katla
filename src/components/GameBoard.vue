@@ -473,6 +473,13 @@
     loadWords()
     window.addEventListener('keydown', handlePhysicalKeyboard)
 
+    // Show info modal on first visit
+    const visited = localStorage.getItem('katla_visited')
+    if (!visited) {
+      showInfoModal.value = true
+      localStorage.setItem('katla_visited', 'true')
+    }
+
     console.log('%cUser ID: ' + userId.value, 'color: blue; font-weight: bold;')
     console.warn('%cJangan curang!','color: red; font-size: 2em; font-weight: bold;')
   })
