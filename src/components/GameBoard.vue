@@ -52,43 +52,46 @@
     </header>
 
     <!-- Toolbar / Control Bar -->
-    <div class="w-full max-w-md flex flex-wrap items-center justify-center gap-3 mb-8 px-2">
-      <div class="flex p-1 bg-zinc-500/10 rounded-xl border border-zinc-500/20 backdrop-blur-sm">
+    <div class="w-full max-w-md flex items-center justify-center gap-2 mb-8 px-2 sm:gap-3">
+      <!-- Mode Toggle (Pill) -->
+      <div class="flex p-1 bg-zinc-500/10 rounded-xl border border-zinc-500/20 backdrop-blur-sm shrink-0">
         <button 
           @click="resetGame('daily')"
-          class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all uppercase tracking-wider"
-          :class="gameMode === 'daily' ? 'bg-blue-600 text-white shadow-lg' : 'text-zinc-500 hover:text-zinc-300'"
+          class="px-2.5 py-1.5 sm:px-3 rounded-lg text-[10px] sm:text-xs font-black transition-all uppercase tracking-wider"
+          :class="gameMode === 'daily' ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/20' : 'text-zinc-500 hover:text-zinc-300'"
         >
           {{ currentLanguage === 'id' ? 'Harian' : 'Daily' }}
         </button>
         <button 
           @click="resetGame('random')"
-          class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all uppercase tracking-wider"
-          :class="gameMode === 'random' ? 'bg-blue-600 text-white shadow-lg' : 'text-zinc-500 hover:text-zinc-300'"
+          class="px-2.5 py-1.5 sm:px-3 rounded-lg text-[10px] sm:text-xs font-black transition-all uppercase tracking-wider"
+          :class="gameMode === 'random' ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/20' : 'text-zinc-500 hover:text-zinc-300'"
         >
           Random
         </button>
       </div>
 
+      <!-- Language Toggle -->
       <button
         @click="toggleLanguage"
-        class="flex items-center gap-2 px-4 py-2 bg-zinc-500/10 hover:bg-zinc-500/20 border border-zinc-500/20 rounded-xl text-xs font-bold transition-all active:scale-95 text-zinc-500 hover:text-zinc-400 dark:hover:text-zinc-300"
+        class="flex items-center gap-1.5 px-3 py-2.5 bg-zinc-500/10 hover:bg-zinc-500/20 border border-zinc-500/20 rounded-xl text-[10px] sm:text-xs font-black transition-all active:scale-95 text-zinc-500 hover:text-zinc-400 dark:hover:text-zinc-300 shrink-0"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 opacity-70">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5 sm:w-4 sm:h-4 opacity-70">
           <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.996 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
         </svg>
         <span class="tracking-widest uppercase">{{ currentLanguage }}</span>
       </button>
 
+      <!-- Skip Button -->
       <button
         @click="skipWord"
-        class="flex items-center gap-2 px-4 py-2 bg-zinc-500/10 hover:bg-zinc-500/20 border border-zinc-500/20 rounded-xl text-xs font-bold transition-all active:scale-95 group text-zinc-500 hover:text-zinc-400 dark:hover:text-zinc-300"
+        class="flex items-center gap-1.5 px-3 py-2.5 bg-zinc-500/10 hover:bg-zinc-500/20 border border-zinc-500/20 rounded-xl text-[10px] sm:text-xs font-black transition-all active:scale-95 group text-zinc-500 hover:text-zinc-400 dark:hover:text-zinc-300 shrink-0"
         aria-label="Skip kata ini"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 group-hover:rotate-180 transition-transform duration-500 opacity-70">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:rotate-180 transition-transform duration-500 opacity-70">
           <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
         </svg>
-        <span class="uppercase tracking-widest">{{ currentLanguage === 'id' ? 'Ganti' : 'Skip' }}</span>
+        <span class="hidden sm:inline uppercase tracking-widest">{{ currentLanguage === 'id' ? 'Ganti' : 'Skip' }}</span>
       </button>
     </div>
 
