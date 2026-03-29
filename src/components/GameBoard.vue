@@ -141,7 +141,7 @@
           <span class="text-zinc-500 group-hover:text-zinc-400 transition-colors">{{ currentLanguage === 'id' ? 'Posisi Salah' : 'Present' }}</span>
         </div>
         <div class="flex items-center gap-2 group">
-          <div class="w-3.5 h-3.5 bg-zinc-700 rounded shadow-sm group-hover:scale-110 transition-transform"></div>
+          <div class="w-3.5 h-3.5 bg-zinc-700 rounded shadow-sm group-hover:scale-110 transition-transform" style="background-color: #27272a;"></div>
           <span class="text-zinc-500 group-hover:text-zinc-400 transition-colors">{{ currentLanguage === 'id' ? 'Tidak Ada' : 'Absent' }}</span>
         </div>
       </div>
@@ -589,9 +589,9 @@
 <style scoped>
   .key.bg-green-600 { background-color: #538d4e !important; }
   .key.bg-yellow-500 { background-color: #b59f3b !important; }
-  .key.bg-zinc-700 { background-color: #3a3a3c !important; }
+  .key.bg-zinc-700 { background-color: #27272a !important; }
   
-  .light .key.bg-zinc-700 { background-color: #787c7e !important; }
+  .light .key.bg-zinc-700 { background-color: #3f3f46 !important; }
 
   .key:hover {
     filter: brightness(1.1);
@@ -606,9 +606,9 @@
   /* Box Status Colors */
   .bg-green-600 { background-color: #538d4e !important; border-color: #538d4e !important; }
   .bg-yellow-500 { background-color: #b59f3b !important; border-color: #b59f3b !important; }
-  .bg-zinc-700 { background-color: #3a3a3c !important; border-color: #3a3a3c !important; }
+  .bg-zinc-700 { background-color: #27272a !important; border-color: #27272a !important; }
   
-  .light .bg-zinc-700 { background-color: #787c7e !important; border-color: #787c7e !important; }
+  .light .bg-zinc-700 { background-color: #3f3f46 !important; border-color: #3f3f46 !important; }
   .light .border-zinc-600 { border-color: #d4d4d8; }
   .dark .border-zinc-600 { border-color: #3f3f46; }
 
