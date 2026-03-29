@@ -4,7 +4,7 @@
 [![Vite](https://img.shields.io/badge/Vite-6.x-646cff?logo=vite&logoColor=white)](https://vitejs.dev/)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4.x-38bdf8?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![PWA Ready](https://img.shields.io/badge/PWA-Ready-5a0fc8?logo=pwa&logoColor=white)](https://web.dev/progressive-web-apps/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 **Katla** is a premium, multi-language Wordle clone — guess the 5-letter word in 6 tries. It supports both **Indonesian** 🇮🇩 and **English** 🇺🇸, features daily and random game modes, and is fully installable as a Progressive Web App (PWA).
 
