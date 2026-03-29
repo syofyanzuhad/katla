@@ -592,19 +592,7 @@
 
   onMounted(async () => {
     await loadWords()
-
-    // Check for existing daily state
-    if (gameMode.value === 'daily') {
-      const savedState = getDailyState(getTodaySeed())
-      if (savedState) {
-        loadDailyState(savedState)
-        if (savedState.gameOver) {
-          setTimeout(() => {
-            showModal.value = true
-          }, 1000)
-        }
-      }
-    }
+    checkDailyState()
 
     window.addEventListener('keydown', handlePhysicalKeyboard)
 
@@ -627,11 +615,30 @@
     showQuickTip.value = false
   }
 
+  function checkDailyState() {
+    if (gameMode.value === 'daily') {
+      const savedState = getDailyState(getTodaySeed())
+      if (savedState) {
+        loadDailyState(savedState)
+        if (savedState.gameOver) {
+          setTimeout(() => {
+            showModal.value = true
+          }, 1000)
+        }
+      }
+    }
+  }
+
   function resetGame(mode = 'random') {
     resetGameLogic(mode)
     toast.value = { show: false, message: '', type: 'info' }
     showModal.value = false
     shakeRowIndex.value = null
+    
+    // Check for saved state if switching back to daily
+    if (mode === 'daily') {
+      checkDailyState()
+    }
   }
 
   function openStats() {
