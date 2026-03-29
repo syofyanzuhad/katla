@@ -1,95 +1,95 @@
 <template>
-  <div class="min-h-screen max-w-screen w-full transition-colors duration-300 flex flex-col items-center p-2 sm:p-4" :class="theme === 'dark' ? 'bg-zinc-900 text-white' : 'bg-zinc-100 text-zinc-900'">
-    <header class="w-full max-w-2xl relative mb-2 sm:mb-4">
-      <button
-        @click="openInfo"
-        class="absolute left-0 top-1/2 -translate-y-1/2 px-3 py-2 bg-zinc-700 hover:bg-zinc-600 rounded text-sm transition"
-        aria-label="Info & Cara Main"
-      >
-        ℹ️
-      </button>
-      <div class="text-2xl sm:text-3xl font-bold text-center" :class="theme === 'dark' ? 'text-white' : 'text-zinc-900'">
-        <span class="text-red-500 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">K</span>
-        <span class="text-red-500 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">A</span>
-        <span :class="theme === 'dark' ? 'text-black [text-shadow:_2px_2px_4px_rgb(255_255_255_/_40%)]' : 'text-zinc-800 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_20%)]'">T</span>
-        <span :class="theme === 'dark' ? 'text-white [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]' : 'text-zinc-900 [text-shadow:_1px_1px_2px_rgb(0_0_0_/_10%)]'">L</span>
-        <span class="text-green-500 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">L</span>
-        <span class="text-green-500 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">A</span>
+  <div class="min-h-screen max-w-screen w-full transition-all duration-500 flex flex-col items-center p-2 sm:p-4 selection:bg-blue-500/30" :class="theme === 'dark' ? 'bg-zinc-950 text-zinc-100' : 'bg-zinc-50 text-zinc-900'">
+    <!-- Modern Header -->
+    <header class="w-full max-w-2xl flex items-center justify-between mb-6 border-b pb-4 transition-colors duration-300" :class="theme === 'dark' ? 'border-zinc-800' : 'border-zinc-200'">
+      <div class="flex items-center gap-2">
+        <button
+          @click="openInfo"
+          class="p-2.5 bg-zinc-500/10 hover:bg-zinc-500/20 rounded-xl transition-all active:scale-95 group"
+          aria-label="Info & Cara Main"
+        >
+          <span class="text-xl group-hover:rotate-12 transition-transform inline-block">ℹ️</span>
+        </button>
       </div>
-      <div class="absolute right-0 top-1/2 -translate-y-1/2 flex gap-2">
+
+      <div class="flex flex-col items-center">
+        <h1 class="text-3xl sm:text-4xl font-black tracking-tighter flex select-none">
+          <span class="text-red-500 drop-shadow-sm">K</span>
+          <span class="text-red-500 drop-shadow-sm">A</span>
+          <span :class="theme === 'dark' ? 'text-zinc-400' : 'text-zinc-600'">T</span>
+          <span :class="theme === 'dark' ? 'text-zinc-100' : 'text-zinc-900'">L</span>
+          <span class="text-green-500 drop-shadow-sm">L</span>
+          <span class="text-green-500 drop-shadow-sm">A</span>
+        </h1>
+      </div>
+
+      <div class="flex items-center gap-2">
         <button
           @click="toggleTheme"
-          class="px-3 py-2 bg-zinc-700 hover:bg-zinc-600 rounded text-sm transition"
+          class="p-2.5 bg-zinc-500/10 hover:bg-zinc-500/20 rounded-xl transition-all active:scale-95 group"
           :aria-label="theme === 'dark' ? 'Ganti ke Mode Terang' : 'Ganti ke Mode Gelap'"
         >
-          {{ theme === 'dark' ? '☀️' : '🌙' }}
-        </button>
-        <button
-          @click="skipWord"
-          class="px-3 py-2 bg-zinc-700 hover:bg-zinc-600 rounded text-sm transition"
-          aria-label="Skip kata ini"
-        >
-          🔄
+          <span class="text-xl group-hover:rotate-45 transition-transform inline-block">{{ theme === 'dark' ? '☀️' : '🌙' }}</span>
         </button>
         <button
           @click="openStats"
-          class="px-3 py-2 bg-zinc-700 hover:bg-zinc-600 rounded text-sm transition"
+          class="p-2.5 bg-zinc-500/10 hover:bg-zinc-500/20 rounded-xl transition-all active:scale-95 group"
           aria-label="Lihat Statistik"
         >
-          📊
+          <span class="text-xl group-hover:scale-110 transition-transform inline-block">📊</span>
         </button>
       </div>
     </header>
 
-    <!-- Mode & Language Indicator -->
-    <div class="mb-4 flex items-center gap-2">
-      <span
-        class="px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wider"
-        :class="gameMode === 'daily' ? 'bg-blue-600 text-white' : 'bg-zinc-700 text-zinc-300'"
-      >
-        {{ gameMode === 'daily' ? (currentLanguage === 'id' ? 'Harian' : 'Daily') : 'Random' }}
-      </span>
-      
+    <!-- Toolbar / Control Bar -->
+    <div class="w-full max-w-md flex flex-wrap items-center justify-center gap-3 mb-8 px-2">
+      <div class="flex p-1 bg-zinc-500/10 rounded-xl border border-zinc-500/20 backdrop-blur-sm">
+        <button 
+          @click="resetGame('daily')"
+          class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all uppercase tracking-wider"
+          :class="gameMode === 'daily' ? 'bg-blue-600 text-white shadow-lg' : 'text-zinc-500 hover:text-zinc-300'"
+        >
+          {{ currentLanguage === 'id' ? 'Harian' : 'Daily' }}
+        </button>
+        <button 
+          @click="resetGame('random')"
+          class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all uppercase tracking-wider"
+          :class="gameMode === 'random' ? 'bg-blue-600 text-white shadow-lg' : 'text-zinc-500 hover:text-zinc-300'"
+        >
+          Random
+        </button>
+      </div>
+
       <button
         @click="toggleLanguage"
-        class="px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wider transition hover:brightness-110"
-        :class="currentLanguage === 'id' ? 'bg-red-600 text-white' : 'bg-blue-800 text-white'"
-        :aria-label="`Ganti Bahasa (Sekarang: ${currentLanguage.toUpperCase()})`"
+        class="flex items-center gap-2 px-4 py-2 bg-zinc-500/10 hover:bg-zinc-500/20 border border-zinc-500/20 rounded-xl text-xs font-bold transition-all active:scale-95"
       >
-        {{ currentLanguage.toUpperCase() }}
+        <span class="opacity-50 text-base">🌐</span>
+        <span class="tracking-widest uppercase">{{ currentLanguage }}</span>
       </button>
 
       <button
-        v-if="gameMode === 'random'"
-        @click="resetGame('daily')"
-        class="text-xs text-blue-400 hover:text-blue-300 transition underline"
+        @click="skipWord"
+        class="flex items-center gap-2 px-4 py-2 bg-zinc-500/10 hover:bg-zinc-500/20 border border-zinc-500/20 rounded-xl text-xs font-bold transition-all active:scale-95 group"
+        aria-label="Skip kata ini"
       >
-        {{ currentLanguage === 'id' ? 'Main Mode Harian' : 'Play Daily Mode' }}
+        <span class="group-hover:rotate-180 transition-transform duration-500 text-base">🔄</span>
+        <span class="uppercase tracking-widest">{{ currentLanguage === 'id' ? 'Ganti' : 'Skip' }}</span>
       </button>
     </div>
 
     <!-- Win Streak Display -->
-    <div v-if="userStats.currentStreak > 1" class="mb-2 px-4 py-2 bg-gradient-to-r from-yellow-600 to-orange-600 rounded-lg shadow-lg animate-pulse-subtle">
-      <div class="flex items-center justify-center gap-2 text-white">
-        <span class="text-xl">🔥</span>
-        <span class="font-bold">{{ userStats.currentStreak }} Win Streak!</span>
-        <span class="text-xl">🔥</span>
+    <div v-if="userStats.currentStreak > 1" class="mb-6 px-6 py-2 bg-gradient-to-r from-orange-600 to-yellow-500 rounded-full shadow-xl shadow-orange-600/20 animate-pulse-subtle">
+      <div class="flex items-center justify-center gap-2 text-white text-sm">
+        <span class="animate-bounce">🔥</span>
+        <span class="font-black italic tracking-widest uppercase">{{ userStats.currentStreak }} Streak!</span>
+        <span class="animate-bounce">🔥</span>
       </div>
     </div>
 
-      <div class="text-sm sm:text-base text-zinc-400 mb-2 sm:mb-4">
-        <ul class="list-disc list-inside" v-if="currentLanguage === 'id'">
-          <li><small>Masukkan kata dengan {{ WORD_LENGTH }} huruf dan tekan ENTER.</small></li>
-          <li><small>🟩: huruf dan posisi benar, 🟨: huruf benar posisi salah, ⬜️: huruf dan posisi salah.</small></li>
-        </ul>
-        <ul class="list-disc list-inside" v-else>
-          <li><small>Enter a {{ WORD_LENGTH }}-letter word and press ENTER.</small></li>
-          <li><small>🟩: correct letter and position, 🟨: correct letter wrong position, ⬜️: wrong letter and position.</small></li>
-        </ul>
-      </div>
-
+    <!-- Main Game Grid -->
     <div
-      class="grid gap-1 sm:gap-2 min-h-[50vh] lg:min-h-[60vh]"
+      class="grid gap-2 mb-8"
       :style="{ gridTemplateRows: `repeat(${MAX_ATTEMPTS}, minmax(0, 1fr))` }"
       role="grid"
       aria-label="Game board"
@@ -97,7 +97,7 @@
       <div
         v-for="(guessRow, rowIndex) in MAX_ATTEMPTS"
         :key="rowIndex"
-        class="grid gap-1 sm:gap-2"
+        class="grid gap-2"
         :style="{ gridTemplateColumns: `repeat(${WORD_LENGTH}, minmax(0, 1fr))` }"
         role="row"
         :aria-label="`Baris ${rowIndex + 1}`"
@@ -105,11 +105,12 @@
         <div
           v-for="colIndex in WORD_LENGTH"
           :key="colIndex"
-          class="w-15 h-15 sm:w-14 sm:h-14 lg:w-25 lg:h-25 border-2 text-xl sm:text-2xl flex items-center justify-center font-bold uppercase transition-all duration-500 ease-in-out transform"
+          class="w-14 h-14 sm:w-16 sm:h-16 lg:w-20 lg:h-20 border-2 rounded-lg text-2xl sm:text-3xl flex items-center justify-center font-black uppercase transition-all duration-300 select-none"
           :class="[
             getBoxClass(rowIndex, colIndex - 1),
             getFlipClass(rowIndex, colIndex - 1),
-            { 'animate-shake': shakeRowIndex === rowIndex }
+            { 'animate-shake': shakeRowIndex === rowIndex },
+            { 'animate-pop': rowIndex === guesses.length && currentGuess.length === colIndex }
           ]"
           role="gridcell"
           :aria-label="getAriaLabel(rowIndex, colIndex - 1)"
@@ -120,67 +121,36 @@
       </div>
     </div>
 
-  <!-- Toast -->
-  <div v-if="toast.show" class="fixed left-1/2 top-1/4 z-50 -translate-x-1/2 -translate-y-1/2 bg-zinc-800 text-white px-4 py-2 rounded-lg shadow-lg w-full max-w-xs transition-all duration-300" :class="toast.type === 'error' ? 'bg-red-600' : 'bg-zinc-800'">
-    <div v-html="toast.message"></div>
-  </div>
+    <!-- Toast Notification -->
+    <Transition name="toast">
+      <div v-if="toast.show" class="fixed left-1/2 top-1/4 z-50 -translate-x-1/2 flex items-center gap-3 px-6 py-3 rounded-2xl shadow-2xl backdrop-blur-md transition-all duration-300" 
+           :class="toast.type === 'error' ? 'bg-red-600 text-white' : 'bg-zinc-800/90 text-white'">
+        <span v-if="toast.type === 'error'" class="text-xl">⚠️</span>
+        <span v-else class="text-xl">✨</span>
+        <div class="font-bold text-sm tracking-wide" v-html="toast.message"></div>
+      </div>
+    </Transition>
 
-    <div class="mt-3 sm:mt-4 space-y-1 sm:space-y-2 text-center sm:max-w-[500px] px-2 w-full lg:w-full">
-      <div class="flex justify-center gap-0.5 sm:gap-1">
+    <!-- Refined Keyboard -->
+    <div class="mt-auto mb-4 space-y-2 w-full max-w-xl px-2">
+      <div v-for="(row, rIdx) in ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM']" :key="rIdx" class="flex justify-center gap-1.5">
+        <button v-if="rIdx === 2" class="key action-key" @click="pressEnter" :class="{ 'active': pressedKey === 'enter' }">
+          ENTER
+        </button>
+        
         <button
-          v-for="key in 'QWERTYUIOP'.split('')"
+          v-for="key in row.split('')"
           :key="key"
           class="key"
-          :class="[getKeyClass(key.toLowerCase()), { 'key-pressed': pressedKey === key.toLowerCase() }]"
+          :class="[getKeyClass(key.toLowerCase()), { 'active': pressedKey === key.toLowerCase() }]"
           @click="pressKey(key)"
-          @mousedown="pressedKey = key.toLowerCase()"
-          @mouseup="pressedKey = ''"
-          @mouseleave="pressedKey = ''"
         >
           {{ key }}
         </button>
-      </div>
-      <div class="flex justify-center gap-0.5 sm:gap-1">
-        <button
-          v-for="key in 'ASDFGHJKL'.split('')"
-          :key="key"
-          class="key"
-          :class="[getKeyClass(key.toLowerCase()), { 'key-pressed': pressedKey === key.toLowerCase() }]"
-          @click="pressKey(key)"
-          @mousedown="pressedKey = key.toLowerCase()"
-          @mouseup="pressedKey = ''"
-          @mouseleave="pressedKey = ''"
-        >
-          {{ key }}
+
+        <button v-if="rIdx === 2" class="key action-key" @click="pressBackspace" :class="{ 'active': pressedKey === 'backspace' }">
+          <span class="text-xl">⌫</span>
         </button>
-      </div>
-      <div class="flex justify-center gap-0.5 sm:gap-1">
-        <button class="key bg-zinc-600"
-          @click="pressEnter"
-          :class="{ 'key-pressed': pressedKey === 'enter' }"
-          @mousedown="pressedKey = 'enter'"
-          @mouseup="pressedKey = ''"
-          @mouseleave="pressedKey = ''"
-        >ENTER</button>
-        <button
-          v-for="key in 'ZXCVBNM'.split('')"
-          :key="key"
-          class="key"
-          :class="[getKeyClass(key.toLowerCase()), { 'key-pressed': pressedKey === key.toLowerCase() }]"
-          @click="pressKey(key)"
-          @mousedown="pressedKey = key.toLowerCase()"
-          @mouseup="pressedKey = ''"
-          @mouseleave="pressedKey = ''"
-        >
-          {{ key }}
-        </button>
-        <button class="key bg-zinc-600"
-          @click="pressBackspace"
-          :class="{ 'key-pressed': pressedKey === 'backspace' }"
-          @mousedown="pressedKey = 'backspace'"
-          @mouseup="pressedKey = ''"
-          @mouseleave="pressedKey = ''"
-        >⌫</button>
       </div>
     </div>
 
@@ -206,37 +176,57 @@
   @reset-stats="handleResetStats"
 />
 
-<!-- Modal Pop Up -->
-<div v-if="showModal" class="fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2">
-  <div class="bg-white text-black rounded-lg shadow-lg p-6 max-w-xs w-full text-center relative">
-    <button @click="showModal = false" aria-label="Tutup" class="absolute top-2 right-2 text-xl text-zinc-500 hover:text-zinc-800 transition p-1 rounded-full focus:outline-none">
-      &times;
+<!-- Result Modal Pop Up -->
+<Transition name="scale">
+<div v-if="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+  <div class="bg-zinc-900 text-white rounded-3xl shadow-2xl p-8 max-w-sm w-full text-center relative border border-zinc-800 scale-in transition-all duration-500">
+    <button @click="showModal = false" aria-label="Tutup" class="absolute top-4 right-4 p-2 text-zinc-500 hover:text-white hover:bg-white/10 transition-all rounded-xl focus:outline-none">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
     </button>
-    <h2 class="text-xl font-bold mb-2">
-      {{ lastResult === 'win' ? '🎉 Selamat!' : '😢 Kamu kalah.' }}
-    </h2>
-    <p v-if="lastResult === 'win'">
-      Kamu menang!<br>
-      <span class="text-sm text-gray-600">Kata: <span class="font-mono font-bold">{{ targetWord.toUpperCase() }}</span></span>
-      <br>
-      <a :href="`/kbbi/${targetWord}`" class="text-blue-500 hover:text-blue-400 transition duration-200">Cek artinya di KBBI</a>
-    </p>
-    <p v-else>
-      Kata: <span class="font-mono font-bold">{{ targetWord.toUpperCase() }}</span><br>
-      <a :href="`/kbbi/${targetWord}`" class="text-blue-500 hover:text-blue-400 transition duration-200">Lihat di KBBI</a>
-    </p>
-    <button @click="shareResult" class="mt-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition cursor-pointer">Salin Hasil</button>
-    <button @click="resetGame" class="ml-1 mt-4 px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 transition cursor-pointer">Reset</button>
-    <div v-if="showShareMsg" class="mt-2 text-green-700 text-sm">Hasil disalin ke clipboard!</div>
-    <p class="text-sm mt-4">Bagikan ke:</p>
-    <div class="flex justify-center gap-2 mt-4">
-      <!-- bagikan ke -->
-      <button @click="openShare('whatsapp')" class="px-3 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition cursor-pointer text-sm">WhatsApp</button>
-      <button @click="openShare('twitter')" class="px-3 py-2 bg-blue-400 text-white rounded hover:bg-blue-500 transition cursor-pointer text-sm">Twitter</button>
-      <button @click="openShare('telegram')" class="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition cursor-pointer text-sm">Telegram</button>
+    
+    <div class="mb-6">
+      <div v-if="lastResult === 'win'" class="text-5xl mb-4 animate-bounce">🎉</div>
+      <div v-else class="text-5xl mb-4 animate-pulse">😢</div>
+      
+      <h2 class="text-3xl font-black tracking-tighter uppercase mb-2">
+        {{ lastResult === 'win' ? (currentLanguage === 'id' ? 'Selamat!' : 'Splendid!') : (currentLanguage === 'id' ? 'Sayang Sekali' : 'Good Try') }}
+      </h2>
+      
+      <div class="inline-block px-4 py-1.5 bg-zinc-800 rounded-full text-xs font-bold uppercase tracking-widest text-zinc-400 border border-white/5">
+        {{ lastResult === 'win' ? (currentLanguage === 'id' ? 'Kamu Menang' : 'You Won') : (currentLanguage === 'id' ? 'Kamu Kalah' : 'You Lost') }}
+      </div>
     </div>
+
+    <div class="bg-zinc-800/50 p-6 rounded-2xl border border-white/5 mb-8">
+      <p class="text-[10px] uppercase font-black tracking-widest text-zinc-500 mb-2">
+        {{ currentLanguage === 'id' ? 'Kata yang benar' : 'The correct word' }}
+      </p>
+      <div class="text-3xl font-black tracking-widest uppercase text-blue-400 mb-4">{{ targetWord }}</div>
+      <a :href="`/kbbi/${targetWord}`" target="_blank" class="inline-flex items-center gap-2 text-xs font-bold text-zinc-400 hover:text-white transition-colors group">
+        <span>{{ currentLanguage === 'id' ? 'Lihat di KBBI' : 'Look up meaning' }}</span>
+        <span class="group-hover:translate-x-1 transition-transform">→</span>
+      </a>
+    </div>
+
+    <div class="grid grid-cols-2 gap-3">
+      <button @click="shareResult" class="flex items-center justify-center gap-2 py-4 bg-green-600 hover:bg-green-500 text-white rounded-2xl transition-all font-black uppercase tracking-widest text-[10px] shadow-lg shadow-green-900/20 active:scale-95">
+        <span>{{ currentLanguage === 'id' ? 'Salin Hasil' : 'Share Result' }}</span>
+      </button>
+      <button @click="resetGame(gameMode)" class="flex items-center justify-center gap-2 py-4 bg-zinc-800 hover:bg-zinc-700 text-white border border-white/5 rounded-2xl transition-all font-black uppercase tracking-widest text-[10px] active:scale-95">
+        <span>{{ currentLanguage === 'id' ? 'Main Lagi' : 'Play Again' }}</span>
+      </button>
+    </div>
+
+    <Transition name="fade">
+      <div v-if="showShareMsg" class="mt-4 py-2 px-4 bg-blue-600/20 text-blue-400 text-[10px] font-black uppercase tracking-widest rounded-lg border border-blue-600/30">
+        {{ currentLanguage === 'id' ? 'Hasil disalin ke clipboard!' : 'Copied to clipboard!' }}
+      </div>
+    </Transition>
   </div>
 </div>
+</Transition>
 </template>
 
 <script setup>
@@ -526,89 +516,79 @@
 
 <style scoped>
   .key {
-    min-width: 1.75rem;
-    padding: 0.5rem 0.75rem;
-    border-radius: 0.25rem;
-    font-weight: bold;
-    font-size: 0.75rem;
-    transition: transform 0.1s ease;
-    background-color: #615f5f;
+    @apply flex-1 flex items-center justify-center h-14 sm:h-16 rounded-lg font-black text-sm sm:text-base transition-all duration-75 active:scale-90 select-none;
+    background-color: #818384;
+    color: white;
   }
 
-  .key.bg-green-600 { background-color: #16a34a !important; } /* 🟩 */
-  .key.bg-yellow-500 { background-color: #eab308 !important; } /* 🟨 */
-  .key.bg-zinc-700 { background-color: #3f3f46 !important; } /* ⬜ */
-
-  @media (min-width: 640px) {
-    .key {
-      min-width: 2.5rem;
-      padding: 0.5rem 0.75rem;
-      font-size: 0.875rem;
-    }
+  .dark .key {
+    background-color: #3a3a3c;
   }
 
-    @media (min-width: 1024px) {
-        .key {
-        min-width: 3rem;
-        padding: 0.5rem 0.75rem;
-        font-size: 1rem;
-        }
-    }
+  .key.bg-green-600 { background-color: #538d4e !important; }
+  .key.bg-yellow-500 { background-color: #b59f3b !important; }
+  .key.bg-zinc-700 { background-color: #3a3a3c !important; }
+  
+  .light .key.bg-zinc-700 { background-color: #787c7e !important; }
+
+  .action-key {
+    @apply px-4 sm:px-6 text-xs sm:text-sm;
+    background-color: #818384;
+  }
+
+  .dark .action-key {
+    background-color: #818384;
+  }
 
   .key:hover {
-    background-color: #3b3b42;
+    @apply brightness-110 shadow-lg;
   }
 
-  .key:active {
-    transform: scale(0.95);
+  .key.active {
+    @apply scale-95 brightness-90;
   }
 
-  @keyframes flip {
-    0% {
-      transform: rotateX(0);
-    }
-    50% {
-      transform: rotateX(90deg);
-    }
-    100% {
-      transform: rotateX(0);
-    }
+  /* Box Status Colors */
+  .bg-green-600 { background-color: #538d4e !important; border-color: #538d4e !important; }
+  .bg-yellow-500 { background-color: #b59f3b !important; border-color: #b59f3b !important; }
+  .bg-zinc-700 { background-color: #3a3a3c !important; border-color: #3a3a3c !important; }
+  
+  .light .bg-zinc-700 { background-color: #787c7e !important; border-color: #787c7e !important; }
+  .light .border-zinc-600 { @apply border-zinc-300; }
+  .dark .border-zinc-600 { @apply border-zinc-700; }
+
+  /* Toast Transition */
+  .toast-enter-active, .toast-leave-active {
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  .toast-enter-from {
+    opacity: 0;
+    transform: translate(-50%, 20px);
+  }
+  .toast-leave-to {
+    opacity: 0;
+    transform: translate(-50%, -20px);
   }
 
-  .animate-flip {
-    animation: flip 0.5s ease-in-out;
+  /* Fade and Scale Transitions */
+  .fade-enter-active, .fade-leave-active { transition: opacity 0.3s; }
+  .fade-enter-from, .fade-leave-to { opacity: 0; }
+
+  .scale-enter-active, .scale-leave-active { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+  .scale-enter-from, .scale-leave-to { transform: scale(0.9); opacity: 0; }
+
+  @keyframes scale-in {
+    0% { transform: scale(0.9); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
   }
-
-  @keyframes shake {
-  0% { transform: translateX(0); }
-  20% { transform: translateX(-5px); }
-  40% { transform: translateX(5px); }
-  60% { transform: translateX(-5px); }
-  80% { transform: translateX(5px); }
-  100% { transform: translateX(0); }
-}
-
-.animate-shake {
-  animation: shake 0.5s ease-in-out;
-}
-
-  .key-pressed {
-    filter: brightness(0.8);
-    transform: scale(0.95);
-    transition: filter 0.05s, transform 0.05s;
+  .scale-in {
+    animation: scale-in 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
   }
 
   @keyframes pulse-subtle {
-    0%, 100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-    50% {
-      opacity: 0.95;
-      transform: scale(1.02);
-    }
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.9; transform: scale(1.02); }
   }
-
   .animate-pulse-subtle {
     animation: pulse-subtle 2s ease-in-out infinite;
   }

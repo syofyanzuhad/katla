@@ -1,118 +1,95 @@
 <template>
-  <div v-if="show" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4" role="dialog" aria-modal="true" aria-labelledby="info-title">
-    <div ref="modalRef" class="bg-zinc-800 text-white rounded-lg shadow-xl max-w-lg w-full p-6 relative max-h-[90vh] overflow-y-auto">
+  <div v-if="show" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" role="dialog" aria-modal="true" aria-labelledby="info-title">
+    <div ref="modalRef" class="bg-zinc-900 text-white rounded-3xl shadow-2xl max-w-lg w-full p-8 relative max-h-[90vh] overflow-y-auto border border-zinc-800 scale-in transition-all duration-500">
       <button
         @click="$emit('close')"
         aria-label="Tutup"
-        class="absolute top-3 right-3 text-2xl text-zinc-400 hover:text-white transition p-1 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+        class="absolute top-4 right-4 p-2 text-zinc-500 hover:text-white hover:bg-white/10 transition-all rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
-        &times;
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
       </button>
 
-      <h2 id="info-title" class="text-2xl font-bold mb-4 text-center">Cara Bermain Katla</h2>
+      <h2 id="info-title" class="text-3xl font-black mb-8 text-center tracking-tighter uppercase">Cara Bermain</h2>
 
-      <div class="space-y-4 text-sm">
+      <div class="space-y-8 text-sm">
         <!-- Objective -->
-        <div>
-          <h3 class="font-bold text-lg mb-2 text-yellow-400">🎯 Tujuan</h3>
-          <p class="text-zinc-300">Tebak kata bahasa Indonesia yang terdiri dari <strong>5 huruf</strong> dalam maksimal <strong>6 percobaan</strong>.</p>
-        </div>
+        <section>
+          <div class="flex items-center gap-3 mb-3">
+            <span class="text-2xl">🎯</span>
+            <h3 class="font-black uppercase tracking-widest text-zinc-400">Tujuan</h3>
+          </div>
+          <p class="text-zinc-300 leading-relaxed pl-10">Tebak kata bahasa Indonesia yang terdiri dari <strong class="text-white">5 huruf</strong> dalam maksimal <strong class="text-white">6 percobaan</strong>.</p>
+        </section>
 
         <!-- How to Play -->
-        <div>
-          <h3 class="font-bold text-lg mb-2 text-green-400">🎮 Cara Main</h3>
-          <ol class="list-decimal list-inside space-y-2 text-zinc-300">
-            <li>Ketik kata 5 huruf menggunakan keyboard atau klik tombol di layar</li>
-            <li>Tekan <kbd class="bg-zinc-700 px-2 py-1 rounded">ENTER</kbd> untuk submit tebakan</li>
-            <li>Warna kotak akan berubah menunjukkan seberapa dekat tebakanmu</li>
-            <li>Gunakan petunjuk warna untuk tebakan berikutnya</li>
-            <li>Menang jika berhasil menebak kata dalam 6 percobaan!</li>
-          </ol>
-        </div>
+        <section>
+          <div class="flex items-center gap-3 mb-4">
+            <span class="text-2xl">🎮</span>
+            <h3 class="font-black uppercase tracking-widest text-zinc-400">Cara Main</h3>
+          </div>
+          <ul class="space-y-3 pl-10">
+            <li v-for="(step, i) in [
+              'Ketik kata 5 huruf menggunakan keyboard',
+              'Tekan ENTER untuk submit tebakan',
+              'Warna kotak akan berubah sebagai petunjuk',
+              'Menang jika semua kotak berwarna hijau!'
+            ]" :key="i" class="flex items-start gap-3 text-zinc-300">
+              <span class="w-5 h-5 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center text-[10px] font-black shrink-0 mt-0.5">{{ i+1 }}</span>
+              <span>{{ step }}</span>
+            </li>
+          </ul>
+        </section>
 
         <!-- Color Guide -->
-        <div>
-          <h3 class="font-bold text-lg mb-2 text-blue-400">🎨 Arti Warna</h3>
-          <div class="space-y-3">
-            <div class="flex items-center gap-3">
-              <div class="w-12 h-12 bg-green-600 rounded flex items-center justify-center font-bold">K</div>
-              <div class="flex-1 text-zinc-300">
-                <strong class="text-green-400">Hijau:</strong> Huruf benar dan di posisi yang tepat
-              </div>
-            </div>
-            <div class="flex items-center gap-3">
-              <div class="w-12 h-12 bg-yellow-500 rounded flex items-center justify-center font-bold">A</div>
-              <div class="flex-1 text-zinc-300">
-                <strong class="text-yellow-400">Kuning:</strong> Huruf benar tapi di posisi yang salah
-              </div>
-            </div>
-            <div class="flex items-center gap-3">
-              <div class="w-12 h-12 bg-zinc-700 rounded flex items-center justify-center font-bold">X</div>
-              <div class="flex-1 text-zinc-300">
-                <strong class="text-zinc-400">Abu-abu:</strong> Huruf tidak ada dalam kata
+        <section>
+          <div class="flex items-center gap-3 mb-4">
+            <span class="text-2xl">🎨</span>
+            <h3 class="font-black uppercase tracking-widest text-zinc-400">Arti Warna</h3>
+          </div>
+          <div class="space-y-4 pl-10">
+            <div v-for="color in [
+              { label: 'Hijau', text: 'Huruf benar dan di posisi yang tepat', bg: 'bg-green-600', icon: '✅' },
+              { label: 'Kuning', text: 'Huruf benar tapi di posisi yang salah', bg: 'bg-yellow-500', icon: '⚠️' },
+              { label: 'Abu-abu', text: 'Huruf tidak ada dalam kata', bg: 'bg-zinc-700', icon: '❌' }
+            ]" :key="color.label" class="flex items-center gap-4 group">
+              <div :class="`w-12 h-12 ${color.bg} rounded-xl flex items-center justify-center font-black text-xl shadow-lg transition-transform group-hover:scale-110` shadow-${color.label === 'Hijau' ? 'green' : (color.label === 'Kuning' ? 'yellow' : 'zinc')}-900/20">K</div>
+              <div class="flex-1">
+                <div class="font-black uppercase text-[10px] tracking-widest mb-0.5" :class="color.label === 'Hijau' ? 'text-green-500' : (color.label === 'Kuning' ? 'text-yellow-500' : 'text-zinc-500')">{{ color.label }}</div>
+                <div class="text-zinc-400 text-xs leading-snug">{{ color.text }}</div>
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
-        <!-- Example -->
-        <div>
-          <h3 class="font-bold text-lg mb-2 text-purple-400">💡 Contoh</h3>
-          <div class="bg-zinc-900 p-3 rounded space-y-2">
-            <p class="text-xs text-zinc-400 mb-2">Kata yang benar: <strong>MAKAN</strong></p>
-
-            <div class="flex gap-1">
-              <div class="w-10 h-10 bg-zinc-700 rounded flex items-center justify-center font-bold text-sm">B</div>
-              <div class="w-10 h-10 bg-yellow-500 rounded flex items-center justify-center font-bold text-sm">A</div>
-              <div class="w-10 h-10 bg-zinc-700 rounded flex items-center justify-center font-bold text-sm">J</div>
-              <div class="w-10 h-10 bg-zinc-700 rounded flex items-center justify-center font-bold text-sm">U</div>
-              <div class="w-10 h-10 bg-green-600 rounded flex items-center justify-center font-bold text-sm">N</div>
+        <!-- Examples -->
+        <section>
+          <div class="flex items-center gap-3 mb-4">
+            <span class="text-2xl">💡</span>
+            <h3 class="font-black uppercase tracking-widest text-zinc-400">Contoh</h3>
+          </div>
+          <div class="bg-zinc-800/50 border border-white/5 p-5 rounded-2xl space-y-4 ml-10">
+            <div class="flex gap-2">
+              <div v-for="(l, i) in 'BAJUN'" :key="i" 
+                   :class="`w-10 h-10 rounded-lg flex items-center justify-center font-black text-sm ${i === 4 ? 'bg-green-600' : (i === 1 ? 'bg-yellow-500' : 'bg-zinc-700')}`">
+                {{ l }}
+              </div>
             </div>
-            <p class="text-xs text-zinc-400">
-              <strong>A</strong> ada dalam kata tapi posisi salah,<br>
-              <strong>N</strong> benar dan di posisi tepat
+            <p class="text-xs text-zinc-400 leading-relaxed italic">
+              Huruf <strong class="text-yellow-500">A</strong> ada tapi posisi salah. <br>
+              Huruf <strong class="text-green-500">N</strong> sudah di posisi yang tepat.
             </p>
-
-            <div class="flex gap-1 mt-3">
-              <div class="w-10 h-10 bg-green-600 rounded flex items-center justify-center font-bold text-sm">M</div>
-              <div class="w-10 h-10 bg-green-600 rounded flex items-center justify-center font-bold text-sm">A</div>
-              <div class="w-10 h-10 bg-green-600 rounded flex items-center justify-center font-bold text-sm">K</div>
-              <div class="w-10 h-10 bg-green-600 rounded flex items-center justify-center font-bold text-sm">A</div>
-              <div class="w-10 h-10 bg-green-600 rounded flex items-center justify-center font-bold text-sm">N</div>
-            </div>
-            <p class="text-xs text-green-400">✅ Benar! Semua huruf dan posisi tepat!</p>
           </div>
-        </div>
-
-        <!-- Tips -->
-        <div>
-          <h3 class="font-bold text-lg mb-2 text-orange-400">💪 Tips</h3>
-          <ul class="list-disc list-inside space-y-1 text-zinc-300">
-            <li>Mulai dengan kata yang punya banyak vokal (A, E, I, O, U)</li>
-            <li>Perhatikan keyboard - warna berubah sesuai huruf yang sudah dicoba</li>
-            <li>Kata harus ada dalam kamus bahasa Indonesia</li>
-            <li>Gunakan petunjuk kuning untuk cari posisi yang tepat</li>
-          </ul>
-        </div>
-
-        <!-- Features -->
-        <div>
-          <h3 class="font-bold text-lg mb-2 text-pink-400">✨ Fitur</h3>
-          <ul class="list-disc list-inside space-y-1 text-zinc-300">
-            <li><strong>Statistik:</strong> Klik tombol 📊 untuk lihat progress kamu</li>
-            <li><strong>Win Streak:</strong> Menang berturut-turut untuk unlock streak banner! 🔥</li>
-            <li><strong>Sharing:</strong> Bagikan hasil ke WhatsApp, Twitter, atau Telegram</li>
-            <li><strong>KBBI:</strong> Cek arti kata di Kamus Besar Bahasa Indonesia</li>
-          </ul>
-        </div>
+        </section>
       </div>
 
-      <div class="mt-6 text-center">
+      <div class="mt-10">
         <button
           @click="$emit('close')"
-          class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-bold"
+          class="w-full py-4 bg-blue-600 hover:bg-blue-500 shadow-lg shadow-blue-900/20 text-white rounded-2xl transition-all font-black uppercase tracking-[0.2em] text-xs active:scale-[0.98]"
         >
-          Mulai Main!
+          Mulai Main
         </button>
       </div>
     </div>
@@ -137,7 +114,11 @@ useFocusTrap(modalRef, toRef(props, 'show'))
 </script>
 
 <style scoped>
-kbd {
-  font-family: monospace;
+@keyframes scale-in {
+  0% { transform: scale(0.9); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.scale-in {
+  animation: scale-in 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 </style>

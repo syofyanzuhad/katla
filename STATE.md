@@ -1,39 +1,39 @@
 # Project State: Katla-Vue
 
 ## Current Status
-The project is a fully-featured, multi-language Wordle clone. It is accessible, performant, and supports Daily/Random modes in both Indonesian and English.
+The project is a premium, modern, and highly interactive Wordle clone. It features a polished UI/UX with glassmorphism, smooth animations, and a refined tactile feel.
 
 ## Completed Features
-- **Multi-Language Support**:
-    - Toggle between Indonesian and English.
-    - Separate word lists (`words_id.json` and `words_en.json`).
-    - Localized help text and UI messages.
+- **Modern UI/UX**:
+    - **Glassmorphism**: Backdrop blur and semi-transparent backgrounds on all modals and toolbars.
+    - **Animations**:
+        - **Pop**: Scale effect when entering letters.
+        - **Flip**: Enhanced 3D transition for reveals.
+        - **Shake**: Refined feedback for invalid words.
+        - **Scale-in**: Smooth entry for modals.
+        - **Bounce/Pulse**: Status feedback in the result modal.
+    - **Refined Keyboard**: Tactile buttons with better spacing, interactive states, and a clear hierarchy for ENTER/Backspace.
+    - **Visual Consistency**: Consistent rounded corners (3xl), gradients, and Zinc-based palette.
 - **Accessibility**: 
-    - Focus trapping in modals.
-    - ARIA roles and live regions for screen readers.
+    - Full focus trapping in all modals.
+    - Comprehensive ARIA support.
 - **Game Modes**: 
-    - **Harian (Daily)**: Seeded word selection for a consistent daily challenge.
-    - **Random**: Endless play with random words.
-    - Prevented duplicate daily result recording.
-- **UI/UX**:
-    - Dark/Light mode toggle with persistence.
-    - Game mode and Language indicators.
-    - Responsive grid and keyboard.
-- **Performance**:
-    - Cached word list loading.
-    - Efficient state management using composables.
-- **Testing**:
-    - 14 unit tests covering core game logic and statistics.
+    - Harian (Daily) and Random modes with a modern toolbar.
+- **Multi-Language Support**: 
+    - Indonesian and English support with localized result modals and help text.
+- **Testing**: 14 unit tests passing.
+
+## Technical Improvements
+- Modernized `src/style.css` with animation foundations and glassmorphism.
+- Refactored `GameBoard.vue` for a much cleaner template and style block.
+- Standardized modal designs across `StatsModal`, `InfoModal`, and the Result modal.
 
 ## Next Steps
-1. **Polish UI**: Add more animations for transitions between modes/languages.
-2. **Cloud Integration**: Optional Appwrite/Firebase for global leaderboards or cross-device stats.
-3. **Dictionary Expansion**: Increase the English word list (currently a small sample).
-4. **PWA Improvements**: Enhance offline support and install experience.
+1. **Dictionary Expansion**: Further expand the English word list.
+2. **Global Leaderboards**: Optional integration for social competition.
+3. **PWA Splash Screen**: Improve the startup experience on mobile.
 
 ## Verification & Testing
-- **Unit Tests**: 14/14 passing.
-- **Manual Verification**:
-    - Language toggle correctly updates dictionary and UI text.
-    - Accessibility features (focus trap) working on all modals.
-    - Themes apply correctly and persist.
+- **Visual Audit**: Verified modern look across light/dark themes.
+- **Performance**: High frame rate during animations; near-instant state transitions.
+- **Responsiveness**: Tested on mobile, tablet, and desktop layouts.
