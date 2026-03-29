@@ -52,9 +52,49 @@ export function useShare() {
     }
   }
 
+  function generateStatsText(stats) {
+    const winRate = stats.totalGames === 0 ? 0 : Math.round((stats.wins / stats.totalGames) * 100)
+    let text = `📊 Statistik Katla\n\n`
+    text += `Main: ${stats.totalGames}\n`
+    text += `Menang: ${winRate}%\n`
+    text += `Streak: ${stats.currentStreak}\n`
+    text += `Max Streak: ${stats.maxStreak}\n\n`
+    text += `${window.location.href}`
+    return text
+  }
+
+  async function shareStats(stats) {
+    const text = generateStatsText(stats)
+    try {
+      await navigator.clipboard.writeText(text)
+      showShareMsg.value = true
+      setTimeout(() => showShareMsg.value = false, 2000)
+    } catch (e) {
+      console.error('Error sharing stats:', e)
+      alert('Gagal menyalin statistik ke clipboard')
+    }
+  }
+
+  function openStatsShare(app, stats) {
+    const text = encodeURIComponent(generateStatsText(stats))
+    let url = ''
+    if (app === 'whatsapp') {
+      url = `https://wa.me/?text=${text}`
+    } else if (app === 'twitter') {
+      url = `https://twitter.com/intent/tweet?text=${text}`
+    } else if (app === 'telegram') {
+      url = `https://t.me/share/url?text=${text}`
+    }
+    if (url) {
+      window.open(url, '_blank')
+    }
+  }
+
   return {
     showShareMsg,
     shareResult,
-    openShare
+    openShare,
+    shareStats,
+    openStatsShare
   }
 }
