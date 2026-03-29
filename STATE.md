@@ -1,26 +1,39 @@
 # Project State: Katla-Vue
 
 ## Current Status
-The project is a functional and refactored Wordle clone (Katla) built with Vue 3, Vite 6, and Tailwind CSS 4. Core logic is now extracted into composables, and testing infrastructure is in place.
+The project is a fully-featured, multi-language Wordle clone. It is accessible, performant, and supports Daily/Random modes in both Indonesian and English.
 
 ## Completed Features
-- **Core Game Loop**: Refactored into `useGameLogic` composable. Supports word fetching, guess validation, letter status calculation, and game-over states.
-- **Persistence**: Refactored `userStats.js` with `crypto.randomUUID()` and robust `localStorage` parsing error handling.
-- **UI/UX**: Responsive game board using dynamic grid styles, virtual keyboard, info/stats modals, and share functionality (refactored into `useShare`).
-- **Audio**: Refactored into `useAudio` composable.
-- **Testing**: Vitest configured with unit tests for game logic and user statistics.
-- **PWA**: Basic PWA support via `vite-plugin-pwa`.
-- **Cleanup**: Consolidated Umami analytics and fixed runtime errors.
+- **Multi-Language Support**:
+    - Toggle between Indonesian and English.
+    - Separate word lists (`words_id.json` and `words_en.json`).
+    - Localized help text and UI messages.
+- **Accessibility**: 
+    - Focus trapping in modals.
+    - ARIA roles and live regions for screen readers.
+- **Game Modes**: 
+    - **Harian (Daily)**: Seeded word selection for a consistent daily challenge.
+    - **Random**: Endless play with random words.
+    - Prevented duplicate daily result recording.
+- **UI/UX**:
+    - Dark/Light mode toggle with persistence.
+    - Game mode and Language indicators.
+    - Responsive grid and keyboard.
+- **Performance**:
+    - Cached word list loading.
+    - Efficient state management using composables.
+- **Testing**:
+    - 14 unit tests covering core game logic and statistics.
 
-## Next Steps (Planned)
-1. **Accessibility**: Implement focus trapping in modals and improve screen reader support for the game grid.
-2. **Performance**: Optimize word list loading (consider lazy loading or partial fetch if dictionary grows).
-3. **Features**:
-   - Add "Word of the Day" mode (currently only random mode).
-   - Add dark/light mode toggle (currently fixed dark).
-   - Add language support (Indonesian and English).
-4. **Cloud Integration**: (Optional) Implement Appwrite or similar for cross-device stat synchronization.
+## Next Steps
+1. **Polish UI**: Add more animations for transitions between modes/languages.
+2. **Cloud Integration**: Optional Appwrite/Firebase for global leaderboards or cross-device stats.
+3. **Dictionary Expansion**: Increase the English word list (currently a small sample).
+4. **PWA Improvements**: Enhance offline support and install experience.
 
 ## Verification & Testing
-- **Unit Tests**: 13 tests passing across `gameLogic.spec.js` and `userStats.spec.js`.
-- **Manual Verification**: No console errors on mount/unmount; game functions as expected.
+- **Unit Tests**: 14/14 passing.
+- **Manual Verification**:
+    - Language toggle correctly updates dictionary and UI text.
+    - Accessibility features (focus trap) working on all modals.
+    - Themes apply correctly and persist.

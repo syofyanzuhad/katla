@@ -60,6 +60,20 @@ describe('userStats', () => {
     expect(stats.maxStreak).toBe(2)
   })
 
+  it('prevents duplicate daily game records', () => {
+    const seed = 20260329
+    recordGameResult(true, 3, 'daily', seed)
+    let stats = getUserStats()
+    expect(stats.totalGames).toBe(1)
+    expect(stats.lastDailyGame).toBe(seed)
+
+    // Attempt to record again with same seed
+    recordGameResult(true, 2, 'daily', seed)
+    stats = getUserStats()
+    expect(stats.totalGames).toBe(1) // Should still be 1
+    expect(stats.wins).toBe(1) // Should still be 1
+  })
+
   it('resets all stats', () => {
     recordGameResult(true, 3)
     resetAllStats()

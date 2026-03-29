@@ -42,7 +42,8 @@ export function getUserStats() {
       5: 0,
       6: 0
     },
-    lastPlayed: null
+    lastPlayed: null,
+    lastDailyGame: null // Format: YYYYMMDD
   }
 
   if (!statsJson) return defaultStats
@@ -61,8 +62,17 @@ export function saveUserStats(stats) {
 }
 
 // Record game result
-export function recordGameResult(won, guessCount) {
+export function recordGameResult(won, guessCount, mode = 'random', seed = null) {
   const stats = getUserStats()
+
+  // Prevent duplicate daily game records
+  if (mode === 'daily' && seed) {
+    if (stats.lastDailyGame === seed) {
+      console.warn('Daily game already recorded for today.')
+      return stats
+    }
+    stats.lastDailyGame = seed
+  }
 
   stats.totalGames++
   stats.lastPlayed = new Date().toISOString()

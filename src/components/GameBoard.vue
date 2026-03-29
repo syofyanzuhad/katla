@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen max-w-screen w-full bg-zinc-900 text-white flex flex-col items-center p-2 sm:p-4">
+  <div class="min-h-screen max-w-screen w-full transition-colors duration-300 flex flex-col items-center p-2 sm:p-4" :class="theme === 'dark' ? 'bg-zinc-900 text-white' : 'bg-zinc-100 text-zinc-900'">
     <header class="w-full max-w-2xl relative mb-2 sm:mb-4">
       <button
         @click="openInfo"
@@ -8,15 +8,22 @@
       >
         ℹ️
       </button>
-      <div class="text-2xl sm:text-3xl font-bold text-center text-white">
+      <div class="text-2xl sm:text-3xl font-bold text-center" :class="theme === 'dark' ? 'text-white' : 'text-zinc-900'">
         <span class="text-red-500 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">K</span>
         <span class="text-red-500 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">A</span>
-        <span class="text-black [text-shadow:_2px_2px_4px_rgb(255_255_255_/_40%)]">T</span>
-        <span class="text-white [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">L</span>
+        <span :class="theme === 'dark' ? 'text-black [text-shadow:_2px_2px_4px_rgb(255_255_255_/_40%)]' : 'text-zinc-800 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_20%)]'">T</span>
+        <span :class="theme === 'dark' ? 'text-white [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]' : 'text-zinc-900 [text-shadow:_1px_1px_2px_rgb(0_0_0_/_10%)]'">L</span>
         <span class="text-green-500 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">L</span>
         <span class="text-green-500 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">A</span>
       </div>
       <div class="absolute right-0 top-1/2 -translate-y-1/2 flex gap-2">
+        <button
+          @click="toggleTheme"
+          class="px-3 py-2 bg-zinc-700 hover:bg-zinc-600 rounded text-sm transition"
+          :aria-label="theme === 'dark' ? 'Ganti ke Mode Terang' : 'Ganti ke Mode Gelap'"
+        >
+          {{ theme === 'dark' ? '☀️' : '🌙' }}
+        </button>
         <button
           @click="skipWord"
           class="px-3 py-2 bg-zinc-700 hover:bg-zinc-600 rounded text-sm transition"
@@ -34,6 +41,33 @@
       </div>
     </header>
 
+    <!-- Mode & Language Indicator -->
+    <div class="mb-4 flex items-center gap-2">
+      <span
+        class="px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wider"
+        :class="gameMode === 'daily' ? 'bg-blue-600 text-white' : 'bg-zinc-700 text-zinc-300'"
+      >
+        {{ gameMode === 'daily' ? (currentLanguage === 'id' ? 'Harian' : 'Daily') : 'Random' }}
+      </span>
+      
+      <button
+        @click="toggleLanguage"
+        class="px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wider transition hover:brightness-110"
+        :class="currentLanguage === 'id' ? 'bg-red-600 text-white' : 'bg-blue-800 text-white'"
+        :aria-label="`Ganti Bahasa (Sekarang: ${currentLanguage.toUpperCase()})`"
+      >
+        {{ currentLanguage.toUpperCase() }}
+      </button>
+
+      <button
+        v-if="gameMode === 'random'"
+        @click="resetGame('daily')"
+        class="text-xs text-blue-400 hover:text-blue-300 transition underline"
+      >
+        {{ currentLanguage === 'id' ? 'Main Mode Harian' : 'Play Daily Mode' }}
+      </button>
+    </div>
+
     <!-- Win Streak Display -->
     <div v-if="userStats.currentStreak > 1" class="mb-2 px-4 py-2 bg-gradient-to-r from-yellow-600 to-orange-600 rounded-lg shadow-lg animate-pulse-subtle">
       <div class="flex items-center justify-center gap-2 text-white">
@@ -44,21 +78,29 @@
     </div>
 
       <div class="text-sm sm:text-base text-zinc-400 mb-2 sm:mb-4">
-        <ul class="list-disc list-inside">
+        <ul class="list-disc list-inside" v-if="currentLanguage === 'id'">
           <li><small>Masukkan kata dengan {{ WORD_LENGTH }} huruf dan tekan ENTER.</small></li>
           <li><small>🟩: huruf dan posisi benar, 🟨: huruf benar posisi salah, ⬜️: huruf dan posisi salah.</small></li>
+        </ul>
+        <ul class="list-disc list-inside" v-else>
+          <li><small>Enter a {{ WORD_LENGTH }}-letter word and press ENTER.</small></li>
+          <li><small>🟩: correct letter and position, 🟨: correct letter wrong position, ⬜️: wrong letter and position.</small></li>
         </ul>
       </div>
 
     <div
       class="grid gap-1 sm:gap-2 min-h-[50vh] lg:min-h-[60vh]"
       :style="{ gridTemplateRows: `repeat(${MAX_ATTEMPTS}, minmax(0, 1fr))` }"
+      role="grid"
+      aria-label="Game board"
     >
       <div
         v-for="(guessRow, rowIndex) in MAX_ATTEMPTS"
         :key="rowIndex"
         class="grid gap-1 sm:gap-2"
         :style="{ gridTemplateColumns: `repeat(${WORD_LENGTH}, minmax(0, 1fr))` }"
+        role="row"
+        :aria-label="`Baris ${rowIndex + 1}`"
       >
         <div
           v-for="colIndex in WORD_LENGTH"
@@ -69,6 +111,9 @@
             getFlipClass(rowIndex, colIndex - 1),
             { 'animate-shake': shakeRowIndex === rowIndex }
           ]"
+          role="gridcell"
+          :aria-label="getAriaLabel(rowIndex, colIndex - 1)"
+          :aria-live="rowIndex === guesses.length ? 'polite' : 'off'"
         >
           {{ getLetterDisplay(rowIndex, colIndex - 1) }}
         </div>
@@ -203,7 +248,11 @@
   import { useGameLogic } from '../composables/useGameLogic'
   import { useAudio } from '../composables/useAudio'
   import { useShare } from '../composables/useShare'
+  import { useTheme } from '../composables/useTheme'
   import { WORD_LENGTH, MAX_ATTEMPTS } from '../constants'
+  import { getTodaySeed } from '../utils/dateUtils'
+
+  const { theme, toggleTheme } = useTheme()
 
   const {
     targetWord,
@@ -212,10 +261,13 @@
     gameOver,
     usedKeys,
     lastResult,
+    gameMode,
+    currentLanguage,
     loadWords,
     submitGuess: submitGuessLogic,
     getLetterStatuses,
-    resetGame: resetGameLogic
+    resetGame: resetGameLogic,
+    toggleLanguage
   } = useGameLogic()
 
   const {
@@ -279,7 +331,7 @@
       onWin: () => {
         showToast(`🎉 Selamat! Kamu menang! Cek artinya di <a href="/kbbi/${targetWord.value}" class="text-blue-400 hover:text-blue-300 transition duration-200">KBBI</a>`, 'success')
         showModal.value = true
-        recordGameResult(true, guesses.value.length)
+        recordGameResult(true, guesses.value.length, gameMode.value, getTodaySeed())
         addGameToHistory({
           word: targetWord.value,
           won: true,
@@ -297,7 +349,7 @@
       onLoss: () => {
         showToast(`😢 Kamu kalah. Kata: ${targetWord.value.toUpperCase()} - <a href="/kbbi/${targetWord.value}" class="text-blue-400 hover:text-blue-300 transition duration-200">Lihat di KBBI</a>`, 'error')
         showModal.value = true
-        recordGameResult(false, guesses.value.length)
+        recordGameResult(false, guesses.value.length, gameMode.value, getTodaySeed())
         addGameToHistory({
           word: targetWord.value,
           won: false,
@@ -350,6 +402,23 @@
       return currentGuess.value[col]?.toUpperCase() || ''
     }
     return guesses.value[row]?.[col]?.toUpperCase() || ''
+  }
+
+  function getAriaLabel(row, col) {
+    const letter = getLetterDisplay(row, col)
+    if (!letter) return 'Kosong'
+
+    if (row < guesses.value.length) {
+      const statuses = getLetterStatuses(guesses.value[row], targetWord.value.split(''))
+      const status = statuses[col]
+      let statusText = ''
+      if (status === 'correct') statusText = 'Benar'
+      if (status === 'present') statusText = 'Salah posisi'
+      if (status === 'absent') statusText = 'Tidak ada'
+      return `${letter}, ${statusText}`
+    }
+
+    return letter
   }
 
   function getBoxClass(row, col) {
@@ -408,8 +477,8 @@
     window.removeEventListener('keydown', handlePhysicalKeyboard)
   })
 
-  function resetGame() {
-    resetGameLogic()
+  function resetGame(mode = 'random') {
+    resetGameLogic(mode)
     toast.value = { show: false, message: '', type: 'info' }
     showModal.value = false
     shakeRowIndex.value = null
@@ -441,9 +510,16 @@
   }
 
   function skipWord() {
-    if (confirm('Muat kata baru?')) {
-      resetGame()
-      showToast('Kata baru dimuat! 🎯', 'info')
+    const confirmMsg = currentLanguage.value === 'id' 
+      ? 'Muat kata baru? (Ini akan beralih ke mode Random)' 
+      : 'Load new word? (This will switch to Random mode)'
+    const toastMsg = currentLanguage.value === 'id'
+      ? 'Kata baru dimuat! 🎯'
+      : 'New word loaded! 🎯'
+
+    if (confirm(confirmMsg)) {
+      resetGame('random')
+      showToast(toastMsg, 'info')
     }
   }
 </script>

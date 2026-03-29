@@ -1,15 +1,15 @@
 <template>
-  <div v-if="show" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
-    <div class="bg-zinc-800 text-white rounded-lg shadow-xl max-w-lg w-full p-6 relative max-h-[90vh] overflow-y-auto">
+  <div v-if="show" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4" role="dialog" aria-modal="true" aria-labelledby="info-title">
+    <div ref="modalRef" class="bg-zinc-800 text-white rounded-lg shadow-xl max-w-lg w-full p-6 relative max-h-[90vh] overflow-y-auto">
       <button
         @click="$emit('close')"
         aria-label="Tutup"
-        class="absolute top-3 right-3 text-2xl text-zinc-400 hover:text-white transition p-1 rounded-full focus:outline-none"
+        class="absolute top-3 right-3 text-2xl text-zinc-400 hover:text-white transition p-1 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
         &times;
       </button>
 
-      <h2 class="text-2xl font-bold mb-4 text-center">Cara Bermain Katla</h2>
+      <h2 id="info-title" class="text-2xl font-bold mb-4 text-center">Cara Bermain Katla</h2>
 
       <div class="space-y-4 text-sm">
         <!-- Objective -->
@@ -120,7 +120,10 @@
 </template>
 
 <script setup>
-defineProps({
+import { ref, toRef } from 'vue'
+import { useFocusTrap } from '../composables/useFocusTrap'
+
+const props = defineProps({
   show: {
     type: Boolean,
     required: true
@@ -128,6 +131,9 @@ defineProps({
 })
 
 defineEmits(['close'])
+
+const modalRef = ref(null)
+useFocusTrap(modalRef, toRef(props, 'show'))
 </script>
 
 <style scoped>
