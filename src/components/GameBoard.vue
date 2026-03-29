@@ -101,6 +101,30 @@
       </div>
     </div>
 
+    <!-- Quick Tip Banner (First Visit) -->
+    <Transition name="fade">
+      <div v-if="showQuickTip" class="w-full max-w-md mb-6 p-4 rounded-2xl bg-blue-600/10 border border-blue-500/20 backdrop-blur-sm relative group">
+        <button @click="dismissQuickTip" class="absolute top-2 right-2 p-1 text-blue-500/50 hover:text-blue-500 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
+            <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+          </svg>
+        </button>
+        <div class="flex items-start gap-3">
+          <span class="text-xl">💡</span>
+          <div class="text-xs leading-relaxed text-blue-400/90 font-medium">
+            <template v-if="currentLanguage === 'id'">
+              Tebak kata dalam 6 kesempatan. <br>
+              <span class="text-green-500">🟩</span> Benar, <span class="text-yellow-500">🟨</span> Salah posisi, <span class="text-zinc-500">⬜</span> Tidak ada.
+            </template>
+            <template v-else>
+              Guess the word in 6 tries. <br>
+              <span class="text-green-500">🟩</span> Correct, <span class="text-yellow-500">🟨</span> Wrong spot, <span class="text-zinc-500">⬜</span> Not in word.
+            </template>
+          </div>
+        </div>
+      </div>
+    </Transition>
+
     <!-- Main Game Grid -->
     <div
       class="grid gap-2 mb-8"
@@ -292,6 +316,7 @@
   const toast = ref({ show: false, message: '', type: 'info' })
   const showStatsModal = ref(false)
   const showInfoModal = ref(false)
+  const showQuickTip = ref(false)
   const userStats = ref(getUserStats())
   const userId = ref(getUserId())
   const pressedKey = ref('')
@@ -473,10 +498,10 @@
     loadWords()
     window.addEventListener('keydown', handlePhysicalKeyboard)
 
-    // Show info modal on first visit
+    // Show quick tip on first visit
     const visited = localStorage.getItem('katla_visited')
     if (!visited) {
-      showInfoModal.value = true
+      showQuickTip.value = true
       localStorage.setItem('katla_visited', 'true')
     }
 
@@ -487,6 +512,10 @@
   onUnmounted(() => {
     window.removeEventListener('keydown', handlePhysicalKeyboard)
   })
+
+  function dismissQuickTip() {
+    showQuickTip.value = false
+  }
 
   function resetGame(mode = 'random') {
     resetGameLogic(mode)
