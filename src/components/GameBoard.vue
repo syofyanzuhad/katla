@@ -125,6 +125,28 @@
       </div>
     </Transition>
 
+    <!-- Compact Visual Legend -->
+    <div class="w-full max-w-md flex flex-col items-center gap-3 mb-8 px-2">
+      <p class="text-[10px] uppercase font-black tracking-[0.2em] text-zinc-500 opacity-80 select-none">
+        {{ currentLanguage === 'id' ? `Tebak ${WORD_LENGTH} Huruf` : `Guess ${WORD_LENGTH} Letters` }}
+      </p>
+      
+      <div class="flex items-center gap-5 text-[9px] font-black uppercase tracking-widest select-none">
+        <div class="flex items-center gap-2 group">
+          <div class="w-3.5 h-3.5 bg-green-600 rounded shadow-sm group-hover:scale-110 transition-transform"></div>
+          <span class="text-zinc-500 group-hover:text-zinc-400 transition-colors">{{ currentLanguage === 'id' ? 'Benar' : 'Correct' }}</span>
+        </div>
+        <div class="flex items-center gap-2 group">
+          <div class="w-3.5 h-3.5 bg-yellow-500 rounded shadow-sm group-hover:scale-110 transition-transform"></div>
+          <span class="text-zinc-500 group-hover:text-zinc-400 transition-colors">{{ currentLanguage === 'id' ? 'Posisi Salah' : 'Present' }}</span>
+        </div>
+        <div class="flex items-center gap-2 group">
+          <div class="w-3.5 h-3.5 bg-zinc-700 rounded shadow-sm group-hover:scale-110 transition-transform"></div>
+          <span class="text-zinc-500 group-hover:text-zinc-400 transition-colors">{{ currentLanguage === 'id' ? 'Tidak Ada' : 'Absent' }}</span>
+        </div>
+      </div>
+    </div>
+
     <!-- Main Game Grid -->
     <div
       class="grid gap-2 mb-8"
