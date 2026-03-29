@@ -58,3 +58,51 @@ body {
 .light .glass {
   background-color: rgba(244, 244, 245, 0.8); /* zinc-100 with opacity */
 }
+
+/* Global Key Styles */
+.key {
+  display: flex;
+  flex: 1 1 0%;
+  align-items: center;
+  justify-content: center;
+  height: 3.5rem; /* h-14 */
+  border-radius: 0.5rem; /* rounded-lg */
+  font-weight: 900; /* font-black */
+  font-size: 0.875rem; /* text-sm */
+  transition-property: all;
+  transition-duration: 75ms;
+  user-select: none;
+  background-color: #818384;
+  color: white;
+}
+
+.key:active, .key.active {
+  transform: scale(0.9);
+  filter: brightness(0.9);
+}
+
+@media (min-width: 640px) {
+  .key {
+    height: 4rem; /* h-16 */
+    font-size: 1rem; /* text-base */
+  }
+}
+
+.dark .key {
+  background-color: #3a3a3c;
+}
+
+.action-key {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  font-size: 0.75rem; /* text-xs */
+  background-color: #818384;
+}
+
+@media (min-width: 640px) {
+  .action-key {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    font-size: 0.875rem; /* text-sm */
+  }
+}

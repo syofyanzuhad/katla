@@ -54,7 +54,7 @@
               { label: 'Kuning', text: 'Huruf benar tapi di posisi yang salah', bg: 'bg-yellow-500', icon: '⚠️' },
               { label: 'Abu-abu', text: 'Huruf tidak ada dalam kata', bg: 'bg-zinc-700', icon: '❌' }
             ]" :key="color.label" class="flex items-center gap-4 group">
-              <div :class="`w-12 h-12 ${color.bg} rounded-xl flex items-center justify-center font-black text-xl shadow-lg transition-transform group-hover:scale-110` shadow-${color.label === 'Hijau' ? 'green' : (color.label === 'Kuning' ? 'yellow' : 'zinc')}-900/20">K</div>
+              <div :class="`w-12 h-12 ${color.bg} rounded-xl flex items-center justify-center font-black text-xl shadow-lg transition-transform group-hover:scale-110 shadow-${color.label === 'Hijau' ? 'green' : (color.label === 'Kuning' ? 'yellow' : 'zinc')}-900/20`">K</div>
               <div class="flex-1">
                 <div class="font-black uppercase text-[10px] tracking-widest mb-0.5" :class="color.label === 'Hijau' ? 'text-green-500' : (color.label === 'Kuning' ? 'text-yellow-500' : 'text-zinc-500')">{{ color.label }}</div>
                 <div class="text-zinc-400 text-xs leading-snug">{{ color.text }}</div>

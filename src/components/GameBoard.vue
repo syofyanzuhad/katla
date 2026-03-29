@@ -1,14 +1,15 @@
 <template>
   <div class="min-h-screen max-w-screen w-full transition-all duration-500 flex flex-col items-center p-2 sm:p-4 selection:bg-blue-500/30" :class="theme === 'dark' ? 'bg-zinc-950 text-zinc-100' : 'bg-zinc-50 text-zinc-900'">
-    <!-- Modern Header -->
     <header class="w-full max-w-2xl flex items-center justify-between mb-6 border-b pb-4 transition-colors duration-300" :class="theme === 'dark' ? 'border-zinc-800' : 'border-zinc-200'">
       <div class="flex items-center gap-2">
         <button
           @click="openInfo"
-          class="p-2.5 bg-zinc-500/10 hover:bg-zinc-500/20 rounded-xl transition-all active:scale-95 group"
+          class="p-2.5 bg-zinc-500/10 hover:bg-zinc-500/20 rounded-xl transition-all active:scale-95 group text-zinc-500 hover:text-zinc-400 dark:hover:text-zinc-300"
           aria-label="Info & Cara Main"
         >
-          <span class="text-xl group-hover:rotate-12 transition-transform inline-block">ℹ️</span>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 group-hover:rotate-12 transition-transform">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+          </svg>
         </button>
       </div>
 
@@ -26,17 +27,26 @@
       <div class="flex items-center gap-2">
         <button
           @click="toggleTheme"
-          class="p-2.5 bg-zinc-500/10 hover:bg-zinc-500/20 rounded-xl transition-all active:scale-95 group"
+          class="p-2.5 bg-zinc-500/10 hover:bg-zinc-500/20 rounded-xl transition-all active:scale-95 group text-zinc-500 hover:text-zinc-400 dark:hover:text-zinc-300"
           :aria-label="theme === 'dark' ? 'Ganti ke Mode Terang' : 'Ganti ke Mode Gelap'"
         >
-          <span class="text-xl group-hover:rotate-45 transition-transform inline-block">{{ theme === 'dark' ? '☀️' : '🌙' }}</span>
+          <!-- Sun Icon -->
+          <svg v-if="theme === 'dark'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 group-hover:rotate-45 transition-transform">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M3 12h2.25m.386-4.773l1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+          </svg>
+          <!-- Moon Icon -->
+          <svg v-else xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 group-hover:-rotate-12 transition-transform">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+          </svg>
         </button>
         <button
           @click="openStats"
-          class="p-2.5 bg-zinc-500/10 hover:bg-zinc-500/20 rounded-xl transition-all active:scale-95 group"
+          class="p-2.5 bg-zinc-500/10 hover:bg-zinc-500/20 rounded-xl transition-all active:scale-95 group text-zinc-500 hover:text-zinc-400 dark:hover:text-zinc-300"
           aria-label="Lihat Statistik"
         >
-          <span class="text-xl group-hover:scale-110 transition-transform inline-block">📊</span>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 group-hover:scale-110 transition-transform">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+          </svg>
         </button>
       </div>
     </header>
@@ -62,18 +72,22 @@
 
       <button
         @click="toggleLanguage"
-        class="flex items-center gap-2 px-4 py-2 bg-zinc-500/10 hover:bg-zinc-500/20 border border-zinc-500/20 rounded-xl text-xs font-bold transition-all active:scale-95"
+        class="flex items-center gap-2 px-4 py-2 bg-zinc-500/10 hover:bg-zinc-500/20 border border-zinc-500/20 rounded-xl text-xs font-bold transition-all active:scale-95 text-zinc-500 hover:text-zinc-400 dark:hover:text-zinc-300"
       >
-        <span class="opacity-50 text-base">🌐</span>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 opacity-70">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.996 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
+        </svg>
         <span class="tracking-widest uppercase">{{ currentLanguage }}</span>
       </button>
 
       <button
         @click="skipWord"
-        class="flex items-center gap-2 px-4 py-2 bg-zinc-500/10 hover:bg-zinc-500/20 border border-zinc-500/20 rounded-xl text-xs font-bold transition-all active:scale-95 group"
+        class="flex items-center gap-2 px-4 py-2 bg-zinc-500/10 hover:bg-zinc-500/20 border border-zinc-500/20 rounded-xl text-xs font-bold transition-all active:scale-95 group text-zinc-500 hover:text-zinc-400 dark:hover:text-zinc-300"
         aria-label="Skip kata ini"
       >
-        <span class="group-hover:rotate-180 transition-transform duration-500 text-base">🔄</span>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 group-hover:rotate-180 transition-transform duration-500 opacity-70">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+        </svg>
         <span class="uppercase tracking-widest">{{ currentLanguage === 'id' ? 'Ganti' : 'Skip' }}</span>
       </button>
     </div>
@@ -515,37 +529,20 @@
 </script>
 
 <style scoped>
-  .key {
-    @apply flex-1 flex items-center justify-center h-14 sm:h-16 rounded-lg font-black text-sm sm:text-base transition-all duration-75 active:scale-90 select-none;
-    background-color: #818384;
-    color: white;
-  }
-
-  .dark .key {
-    background-color: #3a3a3c;
-  }
-
   .key.bg-green-600 { background-color: #538d4e !important; }
   .key.bg-yellow-500 { background-color: #b59f3b !important; }
   .key.bg-zinc-700 { background-color: #3a3a3c !important; }
   
   .light .key.bg-zinc-700 { background-color: #787c7e !important; }
 
-  .action-key {
-    @apply px-4 sm:px-6 text-xs sm:text-sm;
-    background-color: #818384;
-  }
-
-  .dark .action-key {
-    background-color: #818384;
-  }
-
   .key:hover {
-    @apply brightness-110 shadow-lg;
+    filter: brightness(1.1);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   }
 
   .key.active {
-    @apply scale-95 brightness-90;
+    transform: scale(0.95);
+    filter: brightness(0.9);
   }
 
   /* Box Status Colors */
@@ -554,8 +551,8 @@
   .bg-zinc-700 { background-color: #3a3a3c !important; border-color: #3a3a3c !important; }
   
   .light .bg-zinc-700 { background-color: #787c7e !important; border-color: #787c7e !important; }
-  .light .border-zinc-600 { @apply border-zinc-300; }
-  .dark .border-zinc-600 { @apply border-zinc-700; }
+  .light .border-zinc-600 { border-color: #d4d4d8; }
+  .dark .border-zinc-600 { border-color: #3f3f46; }
 
   /* Toast Transition */
   .toast-enter-active, .toast-leave-active {
