@@ -107,7 +107,7 @@
     <!-- Quick Tip Banner (First Visit) -->
     <Transition name="fade">
       <div v-if="showQuickTip" class="w-full max-w-md mb-6 p-4 rounded-2xl bg-blue-600/10 border border-blue-500/20 backdrop-blur-sm relative group">
-        <button @click="dismissQuickTip" class="absolute top-2 right-2 p-1 text-blue-500/50 hover:text-blue-500 transition-colors">
+        <button @click="dismissQuickTip" class="absolute top-2 right-2 p-1 text-blue-500/50 hover:text-blue-500 transition-colors" aria-label="Tutup tip">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
             <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
           </svg>
@@ -169,6 +169,7 @@
           :aria-label="`Baris ${rowIndex + 1}`"
           @click="rowIndex < guesses.length && currentLanguage === 'id' && window.open(`https://kbbi.kemendikdasmen.go.id/entri/${guesses[rowIndex].join('')}`, '_blank')"
           :class="{ 'cursor-pointer': rowIndex < guesses.length && currentLanguage === 'id' }"
+          :data-testid="`row-${rowIndex}`"
         >
           <div
             v-for="colIndex in WORD_LENGTH"
@@ -183,6 +184,7 @@
             role="gridcell"
             :aria-label="getAriaLabel(rowIndex, colIndex - 1)"
             :aria-live="rowIndex === guesses.length ? 'polite' : 'off'"
+            :data-testid="`cell-${rowIndex}-${colIndex-1}`"
           >
             {{ getLetterDisplay(rowIndex, colIndex - 1) }}
           </div>
@@ -218,7 +220,12 @@
     <!-- Refined Keyboard -->
     <div class="mt-auto mb-4 space-y-2 w-full max-w-xl px-2">
       <div v-for="(row, rIdx) in ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM']" :key="rIdx" class="flex justify-center gap-1.5">
-        <button v-if="rIdx === 2" class="key action-key" @click="pressEnter" :class="{ 'active': pressedKey === 'enter' }">
+        <button v-if="rIdx === 2" 
+          class="key action-key" 
+          @click="pressEnter" 
+          :class="{ 'active': pressedKey === 'enter' }"
+          data-testid="key-enter"
+        >
           ENTER
         </button>
         
@@ -228,11 +235,17 @@
           class="key"
           :class="[getKeyClass(key.toLowerCase()), { 'active': pressedKey === key.toLowerCase() }]"
           @click="pressKey(key)"
+          :data-testid="`key-${key.toLowerCase()}`"
         >
           {{ key }}
         </button>
 
-        <button v-if="rIdx === 2" class="key action-key" @click="pressBackspace" :class="{ 'active': pressedKey === 'backspace' }">
+        <button v-if="rIdx === 2" 
+          class="key action-key" 
+          @click="pressBackspace" 
+          :class="{ 'active': pressedKey === 'backspace' }"
+          data-testid="key-backspace"
+        >
           <span class="text-xl">⌫</span>
         </button>
       </div>
