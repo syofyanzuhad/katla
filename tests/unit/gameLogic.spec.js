@@ -4,6 +4,12 @@ import { useGameLogic } from '../../src/composables/useGameLogic'
 describe('useGameLogic - getLetterStatuses', () => {
   const { getLetterStatuses } = useGameLogic()
 
+  it('defaults to Indonesian (id) language', () => {
+    localStorage.clear()
+    const { currentLanguage } = useGameLogic()
+    expect(currentLanguage.value).toBe('id')
+  })
+
   it('identifies correct letters in correct positions', () => {
     const target = 'APPLE'.split('')
     const guess = 'APPLE'.split('')

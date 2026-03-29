@@ -22,7 +22,12 @@ export function useGameLogic() {
   }
 
   async function loadWords(mode = 'daily', lang = null) {
-    if (lang) currentLanguage.value = lang
+    if (lang) {
+      currentLanguage.value = lang
+    } else if (!localStorage.getItem('katla-lang')) {
+      currentLanguage.value = 'id'
+    }
+    
     gameMode.value = mode
     
     if (cachedWords[currentLanguage.value]) {
