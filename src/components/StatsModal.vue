@@ -149,6 +149,10 @@ const props = defineProps({
   showResetButton: {
     type: Boolean,
     default: false
+  },
+  language: {
+    type: String,
+    default: 'id'
   }
 })
 
@@ -181,11 +185,11 @@ function getBarWidth(guessNumber) {
 }
 
 function handleShareStats() {
-  shareStats(props.stats)
+  shareStats(props.stats, props.language)
 }
 
 function handleOpenStatsShare(app) {
-  openStatsShare(app, props.stats)
+  openStatsShare(app, props.stats, props.language)
 }
 </script>
 

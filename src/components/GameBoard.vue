@@ -277,6 +277,7 @@
   :show="showStatsModal"
   :stats="userStats"
   :userId="userId"
+  :language="currentLanguage"
   :showResetButton="true"
   @close="closeStats"
   @reset-stats="handleResetStats"
@@ -428,7 +429,9 @@
       guesses: guesses.value,
       maxAttempts: MAX_ATTEMPTS,
       targetWord: targetWord.value,
-      getLetterStatuses
+      getLetterStatuses,
+      gameMode: gameMode.value,
+      language: currentLanguage.value
     })
   }
 
@@ -438,7 +441,9 @@
       guesses: guesses.value,
       maxAttempts: MAX_ATTEMPTS,
       targetWord: targetWord.value,
-      getLetterStatuses
+      getLetterStatuses,
+      gameMode: gameMode.value,
+      language: currentLanguage.value
     })
   }
 
