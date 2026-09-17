@@ -40,10 +40,11 @@ export function useShare() {
     text += '\n'
     if (gameMode === 'daily') {
       text += '#Katla #KatlaHariIni\n'
+      text += `${window.location.origin}/`
     } else {
       text += '#Katla\n'
+      text += `${window.location.origin}/?mode=random`
     }
-    text += window.location.href
 
     return text
   }

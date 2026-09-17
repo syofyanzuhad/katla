@@ -376,7 +376,8 @@
 </template>
 
 <script setup>
-  import { ref, onMounted, onUnmounted } from 'vue'
+  import { ref, watch, onMounted, onUnmounted } from 'vue'
+  import { useRoute, useRouter } from 'vue-router'
   import confetti from 'canvas-confetti'
   import { 
     getUserId, 
@@ -427,6 +428,9 @@
     shareResult: shareResultLogic,
     openShare: openShareLogic
   } = useShare()
+
+  const route = useRoute()
+  const router = useRouter()
 
   const shakeRowIndex = ref(null)
   const showModal = ref(false)
@@ -638,8 +642,15 @@
   const handleOnline = () => { isOnline.value = true }
 
   onMounted(async () => {
-    await loadWords()
-    checkDailyState()
+    const queryMode = route.query.mode
+    const initialMode = queryMode === 'random' || queryMode === 'daily'
+      ? queryMode
+      : (localStorage.getItem('katla-mode') || 'daily')
+
+    await loadWords(initialMode)
+    if (initialMode === 'daily') {
+      checkDailyState()
+    }
 
     window.addEventListener('keydown', handlePhysicalKeyboard)
     window.addEventListener('offline', handleOffline)
@@ -654,6 +665,20 @@
 
     console.log('%cUser ID: ' + userId.value, 'color: blue; font-weight: bold;')
     console.warn('%cJangan curang!','color: red; font-size: 2em; font-weight: bold;')
+  })
+
+  // Sync mode changes when user navigates using browser back/forward buttons
+  watch(() => route.query.mode, (newMode) => {
+    const targetMode = newMode === 'random' ? 'random' : 'daily'
+    if (targetMode !== gameMode.value) {
+      resetGameLogic(targetMode)
+      toast.value = { show: false, message: '', type: 'info' }
+      showModal.value = false
+      shakeRowIndex.value = null
+      if (targetMode === 'daily') {
+        checkDailyState()
+      }
+    }
   })
 
   onUnmounted(() => {
@@ -686,8 +711,17 @@
     showModal.value = false
     shakeRowIndex.value = null
     
-    // Check for saved state if switching back to daily
-    if (mode === 'daily') {
+    // Sync mode to URL query
+    if (mode === 'random') {
+      if (route.query.mode !== 'random') {
+        router.replace({ query: { ...route.query, mode: 'random' } })
+      }
+    } else {
+      if (route.query.mode) {
+        const query = { ...route.query }
+        delete query.mode
+        router.replace({ query })
+      }
       checkDailyState()
     }
   }
