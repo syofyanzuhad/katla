@@ -106,7 +106,7 @@
             </div>
             
             <div class="flex items-center gap-2">
-              <a :href="`https://kbbi.kemendikdasmen.go.id/entri/${game.word}`" target="_blank" 
+              <a :href="`/kbbi/${game.word}`" target="_blank" 
                  class="p-2 text-zinc-600 hover:text-blue-400 hover:bg-blue-500/10 rounded-lg transition-all"
                  title="Lihat KBBI">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">

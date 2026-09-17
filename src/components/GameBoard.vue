@@ -192,7 +192,7 @@
           :style="{ gridTemplateColumns: `repeat(${WORD_LENGTH}, minmax(0, 1fr))` }"
           role="row"
           :aria-label="`Baris ${rowIndex + 1}`"
-          @click="rowIndex < guesses.length && currentLanguage === 'id' && window.open(`https://kbbi.kemendikdasmen.go.id/entri/${guesses[rowIndex].join('')}`, '_blank')"
+          @click="rowIndex < guesses.length && currentLanguage === 'id' && window.open(`/kbbi/${guesses[rowIndex].join('')}`, '_blank')"
           :class="{ 'cursor-pointer': rowIndex < guesses.length && currentLanguage === 'id' }"
           :data-testid="`row-${rowIndex}`"
         >
@@ -220,7 +220,7 @@
           <a
             v-if="rowIndex < guesses.length"
             :href="currentLanguage === 'id' 
-              ? `https://kbbi.kemendikdasmen.go.id/entri/${guesses[rowIndex].join('')}` 
+              ? `/kbbi/${guesses[rowIndex].join('')}` 
               : `https://www.merriam-webster.com/dictionary/${guesses[rowIndex].join('')}`"
             target="_blank"
             rel="noopener noreferrer"
