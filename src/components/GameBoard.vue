@@ -199,16 +199,22 @@
           </div>
         </div>
 
-        <!-- KBBI Lookup Link - Desktop Only Icon -->
-        <div class="hidden sm:flex w-8 justify-center">
+        <!-- Dictionary Lookup Link - Always visible for guessed words -->
+        <div class="flex w-7 sm:w-8 justify-center shrink-0">
           <a
-            v-if="rowIndex < guesses.length && currentLanguage === 'id'"
-            :href="`https://kbbi.kemendikdasmen.go.id/entri/${guesses[rowIndex].join('')}`"
+            v-if="rowIndex < guesses.length"
+            :href="currentLanguage === 'id' 
+              ? `https://kbbi.kemendikdasmen.go.id/entri/${guesses[rowIndex].join('')}` 
+              : `https://www.merriam-webster.com/dictionary/${guesses[rowIndex].join('')}`"
             target="_blank"
-            class="p-1.5 text-zinc-600 hover:text-blue-500 hover:bg-blue-500/10 rounded-lg transition-all opacity-0 group-hover/row:opacity-100 focus:opacity-100"
-            :title="`Lihat arti kata '${guesses[rowIndex].join('').toUpperCase()}' di KBBI`"
+            rel="noopener noreferrer"
+            class="p-1.5 text-zinc-500 hover:text-blue-400 hover:bg-blue-500/10 rounded-lg transition-all"
+            :title="currentLanguage === 'id' 
+              ? `Lihat arti kata '${guesses[rowIndex].join('').toUpperCase()}' di KBBI` 
+              : `Look up '${guesses[rowIndex].join('').toUpperCase()}' in dictionary`"
+            aria-label="Lihat arti kata"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor" class="w-4 h-4 sm:w-4.5 sm:h-4.5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.967 0 016 18c1.097 0 2.16.22 3.136.617a5.995 5.995 0 016.728 0 12.17 12.17 0 013.136-.617c1.052 0 2.062.18 3 .512V4.262a8.967 8.967 0 00-3-.512 8.967 8.967 0 00-6 2.292m0-2.292a12.17 12.17 0 013.136-.617c1.052 0 2.062.18 3 .512v14.25A8.987 8.967 0 0118 18a12.17 12.17 0 01-3.136.617m-6.864-14.713a12.115 12.115 0 016.864 0M9 17.01V4.5m1.875 13.5a11.992 11.992 0 003.75 0" />
             </svg>
           </a>
