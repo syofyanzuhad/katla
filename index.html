@@ -1,27 +1,99 @@
 <!doctype html>
-<html lang="en">
+<html lang="id">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/katla.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Katla by syofyanzuhad</title>
-    <meta name="description" content="Katla by syofyanzuhad" />
-    <meta name="theme-color" content="#ffffff" />
-    <meta property="og:title" content="Katla by syofyanzuhad" />
-    <meta property="og:description" content="Katla by syofyanzuhad" />
-    <meta property="og:url" content="https://katla.syofyanzuhad.dev" />
+    <title>Katla — Permainan Tebak Kata Indonesia | Wordle Indonesia</title>
+    <meta name="description" content="Mainkan Katla, permainan tebak kata 5 huruf bahasa Indonesia terpopuler setiap hari. Uji kosakata KBBI kamu, lacak statistik tebakan, dan mainkan secara offline." />
+    <meta name="keywords" content="katla, wordle indonesia, tebak kata, game kata kbbi, katla harian, wordle id, game puzzle indonesia, tebak kata 5 huruf" />
+    <meta name="author" content="Syofyan Zuhad" />
+    <link rel="canonical" href="https://katla.syofyanzuhad.dev/" />
+    <meta name="theme-color" content="#18181b" />
+
+    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Katla by syofyanzuhad" />
-    <meta property="og:locale" content="en_US" />
-    <meta property="og:locale:alternate" content="id_ID" />
-    <meta property="og:image" content="https://katla.syofyanzuhad.dev/og-image.png">
-    <meta name="twitter:image" content="https://katla.syofyanzuhad.dev/og-image.png">
-    <meta name="twitter:title" content="Katla by syofyanzuhad">
-    <meta name="twitter:description" content="Katla by syofyanzuhad">
-    <meta name="twitter:site" content="@syofyan_zuhad">
-    <meta name="twitter:creator" content="@syofyan_zuhad">
-    <meta name="twitter:site" content="@syofyan_zuhad">
-    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:url" content="https://katla.syofyanzuhad.dev/" />
+    <meta property="og:title" content="Katla — Permainan Tebak Kata Indonesia" />
+    <meta property="og:description" content="Tebak kata rahasia 5 huruf dalam 6 kesempatan. Mainkan mode harian atau acak sekarang!" />
+    <meta property="og:site_name" content="Katla" />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:locale:alternate" content="en_US" />
+    <meta property="og:image" content="https://katla.syofyanzuhad.dev/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Katla — Permainan Tebak Kata Indonesia" />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@syofyan_zuhad" />
+    <meta name="twitter:creator" content="@syofyan_zuhad" />
+    <meta name="twitter:title" content="Katla — Permainan Tebak Kata Indonesia" />
+    <meta name="twitter:description" content="Tebak kata rahasia 5 huruf dalam 6 kesempatan. Mainkan mode harian atau acak sekarang!" />
+    <meta name="twitter:image" content="https://katla.syofyanzuhad.dev/og-image.png" />
+
+    <!-- Structured Data (JSON-LD) for Search Engines & AI Assistants -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebApplication",
+          "@id": "https://katla.syofyanzuhad.dev/#app",
+          "name": "Katla",
+          "alternateName": ["Katla Indonesia", "Wordle Bahasa Indonesia"],
+          "url": "https://katla.syofyanzuhad.dev/",
+          "description": "Game tebak kata 5 huruf bahasa Indonesia berbasis KBBI dengan mode harian, latihan acak, dan dukungan PWA offline.",
+          "applicationCategory": "GameApplication",
+          "genre": "Word Game",
+          "operatingSystem": "All",
+          "inLanguage": ["id", "en"],
+          "author": {
+            "@type": "Person",
+            "name": "Syofyan Zuhad",
+            "url": "https://syofyanzuhad.dev"
+          },
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "IDR"
+          }
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://katla.syofyanzuhad.dev/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Apa itu Katla?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Katla adalah permainan tebak kata 5 huruf bahasa Indonesia (terinspirasi dari Wordle) di mana pemain memiliki 6 kesempatan untuk menebak kata rahasia setiap hari."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Bagaimana cara bermain Katla?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Ketik kata 5 huruf yang valid dalam KBBI. Warna kotak akan berubah untuk memberikan petunjuk: Hijau berarti huruf dan posisi tepat, Kuning berarti huruf ada tetapi posisinya salah, Abu-abu berarti huruf tidak ada dalam kata."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Apakah Katla bisa dimainkan secara offline?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Ya, Katla mendukung Progressive Web App (PWA) dan dapat dimainkan tanpa koneksi internet setelah dibuka pertama kali."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+
+    <!-- Analytics & TechForPalestine Banner -->
     <script defer data-domain="katla.syofyanzuhad.dev" src="https://uselumina.laravel.cloud/js/script.js"></script>
     <script defer src="https://umami.syofyanzuhad.dev/script.js" data-website-id="b2e64b13-a593-4cbf-83c3-1b885beb35bd"></script>
     <script src="https://tfpb.techforpalestine.org/lib/banner.min.js"></script>
@@ -31,8 +103,15 @@
         fixed: false,
       });
     </script>
-</head>
+  </head>
   <body>
+    <noscript>
+      <div style="padding: 2rem; text-align: center; font-family: sans-serif; background: #18181b; color: white;">
+        <h1>Katla — Permainan Tebak Kata Bahasa Indonesia</h1>
+        <p>Tebak kata rahasia 5 huruf dalam 6 kesempatan. Dilengkapi kosakata KBBI, mode harian, mode acak, dan statistik permainan.</p>
+        <p>Harap aktifkan JavaScript di peramban Anda untuk memainkan Katla.</p>
+      </div>
+    </noscript>
     <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
   </body>

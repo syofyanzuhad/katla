@@ -10,7 +10,7 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'robots.txt', 'katla.png', '*.mp3', '*.json'],
+      includeAssets: ['favicon.ico', 'robots.txt', 'sitemap.xml', 'llms.txt', 'katla.png', '*.mp3', '*.json'],
       manifest: {
         name: 'Katla',
         short_name: 'Katla',

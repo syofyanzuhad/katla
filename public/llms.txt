@@ -1,0 +1,22 @@
+# Katla — Permainan Tebak Kata Indonesia
+
+> Katla is a modern, web-based Indonesian word-guessing puzzle game inspired by Wordle. It features KBBI (Kamus Besar Bahasa Indonesia) verified words, bilingual support (ID/EN), daily challenge mode, practice mode, stats tracking, offline PWA support, and in-game dictionary definitions.
+
+## Project Details
+- **Website**: https://katla.syofyanzuhad.dev
+- **Source Code**: https://github.com/syofyanzuhad/katla
+- **Author**: Syofyan Zuhad (https://syofyanzuhad.dev)
+- **Language**: Indonesian (primary), English
+- **Category**: Word Game, Educational, Puzzle
+
+## Gameplay Rules
+1. **Objective**: Guess the hidden 5-letter word in 6 attempts or fewer.
+2. **Feedback system**:
+   - 🟩 **Green (Tepat)**: The letter is in the correct position.
+   - 🟨 **Yellow (Ada)**: The letter is in the word but in the wrong position.
+   - ⬜️ **Gray (Salah)**: The letter is not in the word.
+3. **Game Modes**:
+   - **Mode Harian (Daily)**: A shared, synchronized word puzzle that resets each day based on the calendar date.
+   - **Mode Acak (Random)**: Unlimited practice games with random words.
+4. **Dictionary Lookup**: Players can tap on rows to look up KBBI definitions of words.
+5. **Offline PWA**: Full offline gameplay support with local storage state persistence.
