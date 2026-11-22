@@ -680,10 +680,10 @@
     window.addEventListener('offline', handleOffline)
     window.addEventListener('online', handleOnline)
 
-    // Show quick tip on first visit
+    // Show instruction modal on first visit
     const visited = localStorage.getItem('katla_visited')
     if (!visited) {
-      showQuickTip.value = true
+      showInfoModal.value = true
       localStorage.setItem('katla_visited', 'true')
     }
 
